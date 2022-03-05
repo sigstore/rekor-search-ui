@@ -1,4 +1,4 @@
-import { Alert, Box, CircularProgress, Pagination, Paper } from '@mui/material';
+import { Alert, Box, CircularProgress, Pagination, Paper, Typography } from '@mui/material';
 import { bind, Subscribe, SUSPENSE } from '@react-rxjs/core';
 import { createSignal, suspend } from '@react-rxjs/utils';
 import { useObservableSuspense } from 'observable-hooks';
@@ -63,10 +63,10 @@ export function RekorList() {
 
   return (
     <>
-      <Box sx={{mt: 2}}>
+      <Typography sx={{mt: 2}}>
         Showing {rekorEntries.entries.length} of {rekorEntries?.totalCount}
-      </Box>
-      
+      </Typography>
+
       {
         rekorEntries.entries.map(entry => 
           <Highlight key={`${entry.key}-value`} className='yaml'>

@@ -8,6 +8,7 @@ const nextConfig = {
   },
   experimental: {
     concurrentFeatures: true,
+    outputStandalone: true,
   },
 }
 
