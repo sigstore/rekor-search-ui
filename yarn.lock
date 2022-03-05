@@ -1988,7 +1988,7 @@ queue-microtask@^1.2.2:
 
 react-dom@^18.0.0-rc.1:
   version "18.0.0-rc.1"
-  resolved "https://registry.npmjs.org/react-dom/-/react-dom-18.0.0-rc.1.tgz"
+  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.0.0-rc.1.tgz#97296d5a5e7582e65ea0d82a9ccd5953aa05e7f6"
   integrity sha512-BZ9NEwUp56MEguEwAzuh3u4bYE9Jv3QrzjaTmu11PV4C/lJCARTELEI16vjnHLq184GoJcCHMBrDILqlCrkZFQ==
   dependencies:
     loose-envify "^1.1.0"
@@ -2035,7 +2035,7 @@ react-transition-group@^4.4.2:
 
 react@^18.0.0-rc.1:
   version "18.0.0-rc.1"
-  resolved "https://registry.npmjs.org/react/-/react-18.0.0-rc.1.tgz"
+  resolved "https://registry.yarnpkg.com/react/-/react-18.0.0-rc.1.tgz#fbaef1cbf8b1eddb36a869ee1ea723044aa670c2"
   integrity sha512-IdvjOtyeFhITZwDrj+GMvY7kbWnGklRzNByO7/pOVIt0o3VZi++BUybpK3Fen1gDPkOZDP/rag7lSh6RZuWOeQ==
   dependencies:
     loose-envify "^1.1.0"
@@ -2134,7 +2134,7 @@ sass@^1.49.9:
 
 scheduler@^0.21.0-rc.1:
   version "0.21.0-rc.1-next-f468816ef-20220225"
-  resolved "https://registry.npmjs.org/scheduler/-/scheduler-0.21.0-rc.1-next-f468816ef-20220225.tgz"
+  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.21.0-rc.1-next-f468816ef-20220225.tgz#1909b9ce9e67de48f5ca06b52d98828401771e66"
   integrity sha512-/maKldJ78Ba2o1e9kh2mUpqNZH7XrmSQ1o1aa3HUPN/OMotUB9+pBKX/y3Zihkjco21H4cujG9hK2sJOZUpzJw==
   dependencies:
     loose-envify "^1.1.0"

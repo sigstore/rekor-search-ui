@@ -1,40 +1,61 @@
-import { Button, Container, Divider, Grid, TextField, Typography } from '@mui/material';
+import { Box, Button, Card, CardActionArea, Container, CssBaseline, Divider, Grid, Paper, TextField, ThemeProvider, Typography } from '@mui/material';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
 import styles from '../../styles/Home.module.sass';
 import { RekorExplorer } from '../modules/rekor/components/rekor_explorer';
+import { REKOR_SEARCH_THEME } from '../modules/theme/theme';
 
 
 const Home: NextPage = () => {
   return (
-    <div className={styles.layout}>
+    <>
       <Head>
         <title>Rekor Search</title>
         <meta name="description" content="Search the Rekor public transparency log" />
         <link rel="icon" href="/favicon.ico" />
-
       </Head>
-      <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap" />
-      <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
 
-      <Container component="main">
-        <Typography variant="h4" component="h1" className={styles.title}>
-          Rekor Search
-        </Typography>
-        
-        <RekorExplorer />
-      </Container>
+      <ThemeProvider theme={REKOR_SEARCH_THEME}>
+        <Container
+            sx={{
+              mt: 3,
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 3
+            }}>
+          <Typography
+              sx={{
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 2,
+              }}
+              variant="h5"
+              component="h1">
+            <Image src="/rekor-logo.svg" alt="Rekor" width={124} height={40} />
+            search
+          </Typography>
+          
+          <RekorExplorer />
 
-      <Container component="footer" className={styles.footer}>
-        <a
-            href="https://chainguard.dev"
-            target="_blank"
-            rel="noopener noreferrer">
-          <Image src="/logo-full.svg" alt="Chainguard Logo" width={128} height={45} />
-        </a>
-      </Container>
-    </div>
+          <Box component="footer" className={styles.footer}>
+            <Card
+                sx={{
+                  mt: 3
+                }}>
+              <CardActionArea sx={{p: 1}}>
+                <a href="https://chainguard.dev"
+                  target="_blank"
+                  rel="noopener noreferrer">
+                  <Image src="/logo-full.svg" alt="Chainguard Logo" width={123} height={42} />
+                </a>
+              </CardActionArea>
+            </Card>
+          </Box>
+        </Container>
+      </ThemeProvider>
+    </>
   )
 }
 

@@ -1,83 +1,96 @@
-import { CircularProgress } from '@mui/material';
+import { Alert, Box, CircularProgress, Pagination, Paper } from '@mui/material';
 import { bind, Subscribe, SUSPENSE } from '@react-rxjs/core';
 import { createSignal, suspend } from '@react-rxjs/utils';
 import { useObservableSuspense } from 'observable-hooks';
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import Highlight from 'react-highlight';
-import { distinctUntilChanged, filter, startWith, switchMap } from 'rxjs/operators';
-import { RekorIndexQuery, rekorRetrieve } from '../rekor_api';
-import { RekorSearchForm } from './rekor_search_form';
+import { debounceTime, distinctUntilChanged, filter, startWith, switchMap, throttleTime } from 'rxjs/operators';
+import { RekorIndexQuery, rekorRetrieve } from '../api/rekor';
+import { RekorSearchForm } from './search_form';
 import {load, dump} from 'js-yaml';
 import { RekorSchema } from '../types/hashedrekord';
 import { X509Certificate, PublicKey } from '@peculiar/x509';
+import {Convert} from 'pvtsutils';
 
 const [queryChange$, setQuery] = createSignal<RekorIndexQuery>();
 
 const [useRekorIndexList, rekorIndexList$] = bind(
   queryChange$.pipe(
-    distinctUntilChanged((prev, curr) => prev.email === curr.email),
+    throttleTime(200),
     switchMap(query => suspend(rekorRetrieve(query as RekorIndexQuery))),
     startWith(undefined),
   ))
 
 function ErrorFallback({ error, resetErrorBoundary}: FallbackProps) {
   return (
-    <div>
-      <p>Something went wrong:</p>
-      <pre>{error?.message}</pre>
-      <button onClick={resetErrorBoundary}>Try again</button>
-    </div>
+    <Alert sx={{mt: 3}}  severity='error' variant='filled'>
+      Something went wrong for query. Error code: {error?.message}
+    </Alert>
   )
 }
 
-interface SpecOf<T> {
-  spec: T,
-}
+const DUMP_OPTIONS: jsyaml.DumpOptions = {
+  replacer: (key, value) => {
+    if (key === 'integratedTime') {
+      return new Date(value * 1000);
+    }
+    if (key === 'verification') {
+      return '<omitted>'
+    }
 
-interface Rekord {
-  key: string,
-  value: object,
-  body: SpecOf<RekorSchema>,
-  publicKey?: X509Certificate,
-}
-
-function toListRekord(entries: object|undefined): Rekord[] {
-  return Object.entries(entries ?? {}).map(([key, value]) => {
-    const body = load(window.atob(value['body'])) as SpecOf<RekorSchema>;
-
-    return {
-      key,
-      value,
-      body: body,
-      publicKey: new X509Certificate(atob(body.spec.signature.publicKey?.content!))
-    };
-  });
+    if (Convert.isBase64(value)) {
+      try {
+        return load(atob(value));
+      } catch (e) {
+        return value;
+      }
+    }
+    return value;
+  },
 }
 
 export function RekorList() {
-  const rekorEntries = toListRekord(useRekorIndexList());
+  const rekorEntries = useRekorIndexList();
+
+  if (!rekorEntries) {
+    return <></>;
+  }
+
+  if (rekorEntries.entries.length === 0) {
+    return <Alert sx={{mt: 3}} severity="info" variant="filled">No matching entries found</Alert>;
+  }
 
   return (
     <>
-      <link rel="stylesheet" href="/monokai-sublime.css"></link>
-      {rekorEntries.map(rekord => 
-        <>
-          <Highlight key={`${rekord.key}-value`} className='yaml'>
-            {dump(rekord.value)}
+      <Box sx={{mt: 2}}>
+        Showing {rekorEntries.entries.length} of {rekorEntries?.totalCount}
+      </Box>
+      
+      {
+        rekorEntries.entries.map(entry => 
+          <Highlight key={`${entry.key}-value`} className='yaml'>
+            {dump(entry.content, DUMP_OPTIONS)}
           </Highlight>
-          <Highlight key={`${rekord.key}-body`} className='yaml'>
-            {dump(rekord.body)}
-          </Highlight>
-          <Highlight key={`${rekord.key}-publickey`} className='yaml'>
-            {/* {rekord.publicKey?.issuer} */}
-            {rekord.publicKey?.issuerName.toString()}
-          </Highlight>
-        </>
-      )}
+        )
+      }
     </>
   );
 };
+
+export function LoadingIndicator() {
+  return (
+    <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          marginTop: 4,
+        }}>
+      <CircularProgress />
+    </Box>
+  );
+}
 
 export function RekorExplorer() {
   return (
@@ -85,7 +98,7 @@ export function RekorExplorer() {
         <RekorSearchForm onSubmit={email => setQuery({email})} />
         
         <ErrorBoundary FallbackComponent={ErrorFallback}>
-          <Suspense fallback={<CircularProgress />}>
+          <Suspense fallback={<LoadingIndicator />}>
             <Subscribe source$={rekorIndexList$}>
               <RekorList></RekorList>
             </Subscribe>

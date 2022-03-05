@@ -1,10 +1,7 @@
 
-import { Divider, IconButton, InputBase, TextField } from '@mui/material';
+import { Button, TextField } from '@mui/material';
 import { useState } from 'react';
 import Paper from '@mui/material/Paper';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
-import DirectionsIcon from '@mui/icons-material/Directions';
 
 export interface FormProps {
   onSubmit: (email: string) => void,
@@ -14,10 +11,18 @@ export function RekorSearchForm({onSubmit}: FormProps) {
 	const [email, setEmail] = useState('');
 
 	return (
-		<>
-			<form onSubmit={e => {e.preventDefault(); onSubmit(email)}}>
+		<form onSubmit={e => {e.preventDefault(); onSubmit(email)}}>
+			<Paper
+					sx={{
+						p: 2,
+						display: 'flex',
+						flexDirection: 'row',
+						alignItems: 'center',
+						gap: 2
+					}}
+				>
 				<TextField
-						sx={{width: 300}}
+						sx={{width: '40%'}}
 						id="query"
 						label="Email"
 						size="small"
@@ -25,7 +30,13 @@ export function RekorSearchForm({onSubmit}: FormProps) {
 						value={email}
 						onChange={(event) => {setEmail(event.target.value)}}
 				/>
-			</form>
-		</>
+				<Button
+						type="submit"
+						variant="contained"
+				>
+					Search
+				</Button>
+			</Paper>
+		</form>
 	);
 }
