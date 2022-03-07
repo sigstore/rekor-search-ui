@@ -4,6 +4,8 @@ import {map, switchMap} from 'rxjs/operators';
 
 export interface RekorIndexQuery {
   email?: string,
+  artifact?: string,
+  sha?: string,
 }
 
 export interface RekorEntry {
@@ -16,21 +18,21 @@ export interface RekorEntries {
   entries: RekorEntry[],
 }
 
-function retrieveIndex(query: RekorIndexQuery) {
+function retrieveIndex(query: RekorIndexQuery): Observable<string[]> {
   return fromFetch('https://rekor.sigstore.dev/api/v1/index/retrieve', {
            method: 'POST',
            body: JSON.stringify(query),
            headers: {
              'Content-Type': 'application/json',
              'Accept': 'application/json',
-           }
+           },
+           selector: response => response.json(),
          })
-      .pipe(switchMap(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error(`Failed to retrieve index with error: ${response.status}`);
+      .pipe(map(response => {
+        if (response.code) {
+          throw new Error(`Failed to retrieve index: ${response.message}`);
         }
+        return response;
       }));
 }
 
@@ -40,14 +42,14 @@ function retrieveEntries(logIndex: string) {
                headers: {
                  'Content-Type': 'application/json',
                  'Accept': 'application/json',
-               }
+               },
+               selector: response => response.json(),
              })
-      .pipe(switchMap(response => {
-        if (response.ok) {
-          return response.json();
-        } else {
-          throw new Error('Invalid response');
+      .pipe(map(response => {
+        if (response.code) {
+          throw new Error(`Failed to retrieve entries: ${response.message}`);
         }
+        return response;
       }));
 }
 
@@ -55,7 +57,7 @@ export function rekorRetrieve(query: RekorIndexQuery): Observable<RekorEntries> 
   return retrieveIndex(query).pipe(
       map((logIndexes: string[]) => ({
           totalCount: logIndexes.length,
-          indexes: logIndexes.reverse().slice(0, 20),
+          indexes: logIndexes.slice(0, 20),
       })),
       switchMap(log => {
         if (log.indexes.length) {

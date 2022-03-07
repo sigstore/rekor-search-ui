@@ -1,17 +1,15 @@
-import { Alert, Box, CircularProgress, Pagination, Paper, Typography } from '@mui/material';
-import { bind, Subscribe, SUSPENSE } from '@react-rxjs/core';
+import { Alert, Box, CircularProgress, Typography } from '@mui/material';
+import { bind, Subscribe } from '@react-rxjs/core';
 import { createSignal, suspend } from '@react-rxjs/utils';
-import { useObservableSuspense } from 'observable-hooks';
+import { dump, load } from 'js-yaml';
+import { Convert } from 'pvtsutils';
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import Highlight from 'react-highlight';
-import { debounceTime, distinctUntilChanged, filter, startWith, switchMap, throttleTime } from 'rxjs/operators';
-import { RekorIndexQuery, rekorRetrieve } from '../api/rekor';
+import { skip, startWith, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
+import { RekorIndexQuery, rekorRetrieve } from '../api/rekor_api';
 import { RekorSearchForm } from './search_form';
-import {load, dump} from 'js-yaml';
-import { RekorSchema } from '../types/hashedrekord';
-import { X509Certificate, PublicKey } from '@peculiar/x509';
-import {Convert} from 'pvtsutils';
+import {useDestroyed$} from '../../utils/rxjs';
 
 const [queryChange$, setQuery] = createSignal<RekorIndexQuery>();
 
@@ -22,10 +20,18 @@ const [useRekorIndexList, rekorIndexList$] = bind(
     startWith(undefined),
   ))
 
-function ErrorFallback({ error, resetErrorBoundary}: FallbackProps) {
+function ErrorFallback({error, resetErrorBoundary}: FallbackProps) {
+  rekorIndexList$
+      .pipe(
+        // A value will always be returned on subscribe. Wait for a new search to take
+        // place before resetting the error.
+        skip(1),
+        takeUntil(useDestroyed$()))
+      .subscribe(resetErrorBoundary);
+    
   return (
     <Alert sx={{mt: 3}}  severity='error' variant='filled'>
-      Something went wrong for query. Error code: {error?.message}
+      {error?.message}
     </Alert>
   )
 }
@@ -41,7 +47,7 @@ const DUMP_OPTIONS: jsyaml.DumpOptions = {
 
     if (Convert.isBase64(value)) {
       try {
-        return load(atob(value));
+        return load(window.atob(value));
       } catch (e) {
         return value;
       }
@@ -58,7 +64,10 @@ export function RekorList() {
   }
 
   if (rekorEntries.entries.length === 0) {
-    return <Alert sx={{mt: 3}} severity="info" variant="filled">No matching entries found</Alert>;
+    return (
+        <Alert sx={{mt: 3}} severity="info" variant="filled">
+          No matching entries found
+        </Alert>);
   }
 
   return (
@@ -69,7 +78,7 @@ export function RekorList() {
 
       {
         rekorEntries.entries.map(entry => 
-          <Highlight key={`${entry.key}-value`} className='yaml'>
+          <Highlight key={`${entry.key}`} className='yaml'>
             {dump(entry.content, DUMP_OPTIONS)}
           </Highlight>
         )
@@ -95,7 +104,7 @@ export function LoadingIndicator() {
 export function RekorExplorer() {
   return (
       <div>
-        <RekorSearchForm onSubmit={email => setQuery({email})} />
+        <RekorSearchForm onSubmit={query => setQuery(query)} />
         
         <ErrorBoundary FallbackComponent={ErrorFallback}>
           <Suspense fallback={<LoadingIndicator />}>
@@ -107,3 +116,4 @@ export function RekorExplorer() {
       </div>
   );
 }
+

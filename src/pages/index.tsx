@@ -39,7 +39,15 @@ const Home: NextPage = () => {
           
           <RekorExplorer />
 
-          <Box component="footer" className={styles.footer}>
+          <Box
+              component="footer"
+              sx={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                borderTop: 2,
+                borderColor: 'secondary.main',
+              }}>
             <Card
                 sx={{
                   mt: 3

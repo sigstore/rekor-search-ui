@@ -11,7 +11,7 @@ export const REKOR_SEARCH_THEME = createTheme({
   },
   palette: {
     background: {
-      default: '#ffe9d8'
+      default: 'rgba(255, 234, 215, 1)'
     },
     primary: {
       main: '#444444',
