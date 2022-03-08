@@ -12,7 +12,7 @@ const Home: NextPage = () => {
       <Head>
         <title>Rekor Search</title>
         <meta name="description" content="Search the Rekor public transparency log" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/logo.png" />
       </Head>
 
       <ThemeProvider theme={REKOR_SEARCH_THEME}>
