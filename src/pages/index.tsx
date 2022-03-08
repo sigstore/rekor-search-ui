@@ -2,7 +2,6 @@ import { Box, Button, Card, CardActionArea, Container, CssBaseline, Divider, Gri
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Image from 'next/image';
-import styles from '../../styles/Home.module.sass';
 import { RekorExplorer } from '../modules/rekor/components/rekor_explorer';
 import { REKOR_SEARCH_THEME } from '../modules/theme/theme';
 
@@ -47,11 +46,11 @@ const Home: NextPage = () => {
                 alignItems: 'center',
                 borderTop: 2,
                 borderColor: 'secondary.main',
+                mb: 3,
+                pt: 2,
               }}>
-            <Card
-                sx={{
-                  mt: 3
-                }}>
+            <Typography variant="overline" sx={{color: 'secondary.dark'}}>Brought to you by</Typography>
+            <Card>
               <CardActionArea sx={{p: 1}}>
                 <a href="https://chainguard.dev"
                   target="_blank"

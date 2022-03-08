@@ -6,10 +6,10 @@ import { Convert } from 'pvtsutils';
 import { Suspense } from 'react';
 import { ErrorBoundary, FallbackProps } from 'react-error-boundary';
 import Highlight from 'react-highlight';
-import { skip, startWith, switchMap, takeUntil, tap, throttleTime } from 'rxjs/operators';
+import { skip, startWith, switchMap, takeUntil, throttleTime } from 'rxjs/operators';
+import { useDestroyed$ } from '../../utils/rxjs';
 import { RekorIndexQuery, rekorRetrieve } from '../api/rekor_api';
 import { RekorSearchForm } from './search_form';
-import {useDestroyed$} from '../../utils/rxjs';
 
 const [queryChange$, setQuery] = createSignal<RekorIndexQuery>();
 

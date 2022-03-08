@@ -9,8 +9,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.8.1",
+    "@emotion/styled": "^11.8.1",
     "@mui/icons-material": "^5.4.4",
-    "@mui/material": "^5.4.4",
+    "@mui/material": "^5.5.0",
     "@peculiar/x509": "^1.6.1",
     "@react-rxjs/core": "^0.8.4",
     "@react-rxjs/utils": "^0.9.3",
