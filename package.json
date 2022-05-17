@@ -1,38 +1,39 @@
 {
-  "name": "rekor-search-ui",
-  "version": "0.1.0",
-  "private": true,
-  "scripts": {
-    "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "lint": "next lint"
-  },
-  "dependencies": {
-    "@emotion/react": "^11.8.1",
-    "@emotion/styled": "^11.8.1",
-    "@mui/icons-material": "^5.4.4",
-    "@mui/material": "^5.5.0",
-    "@peculiar/x509": "^1.6.1",
-    "@react-rxjs/core": "^0.8.4",
-    "@react-rxjs/utils": "^0.9.3",
-    "@types/js-yaml": "^4.0.5",
-    "@types/react-highlight": "^0.12.5",
-    "js-yaml": "^4.1.0",
-    "next": "^12.1.0",
-    "react": "^18.0.0-rc.1",
-    "react-dom": "^18.0.0-rc.1",
-    "react-error-boundary": "^3.1.4",
-    "react-highlight": "^0.14.0",
-    "rxjs": "^7.5.4",
-    "sass": "^1.49.9",
-    "sharp": "^0.30.2"
-  },
-  "devDependencies": {
-    "@types/node": "17.0.21",
-    "@types/react": "17.0.39",
-    "eslint": "8.10.0",
-    "eslint-config-next": "12.1.0",
-    "typescript": "4.6.2"
-  }
+	"name": "rekor-search-ui",
+	"version": "0.1.0",
+	"private": true,
+	"scripts": {
+		"dev": "next dev",
+		"build": "next build",
+		"start": "next start",
+		"lint": "next lint"
+	},
+	"dependencies": {
+		"@emotion/react": "^11.8.1",
+		"@emotion/styled": "^11.8.1",
+		"@mui/icons-material": "^5.4.4",
+		"@mui/material": "^5.5.0",
+		"@peculiar/x509": "^1.6.1",
+		"@react-rxjs/core": "^0.8.4",
+		"@react-rxjs/utils": "^0.9.3",
+		"@types/js-yaml": "^4.0.5",
+		"@types/react-highlight": "^0.12.5",
+		"js-yaml": "^4.1.0",
+		"next": "^12.1.0",
+		"react-dom": "^18.0.0-rc.1",
+		"react-error-boundary": "^3.1.4",
+		"react-highlight": "^0.14.0",
+		"react": "^18.0.0-rc.1",
+		"rxjs": "^7.5.4",
+		"sass": "^1.49.9",
+		"sharp": "^0.30.2"
+	},
+	"devDependencies": {
+		"prettier": "^2.6.2",
+		"@types/node": "17.0.21",
+		"@types/react": "17.0.39",
+		"eslint-config-next": "12.1.0",
+		"eslint": "8.10.0",
+		"typescript": "4.6.2"
+	}
 }
