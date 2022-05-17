@@ -480,7 +480,7 @@
 
 "@peculiar/x509@^1.6.1":
   version "1.6.1"
-  resolved "https://registry.npmjs.org/@peculiar/x509/-/x509-1.6.1.tgz"
+  resolved "https://registry.yarnpkg.com/@peculiar/x509/-/x509-1.6.1.tgz#cc33807ab481824c69145e884cb40012aec501b0"
   integrity sha512-C4oxpCuYasfjuhy6QRFJhs0R6gyeQSRsB7MsT6JkO3qaFi4b75mm8hNEKa+sIJPtTjXCC94tW9rHx1hw5dOvnQ==
   dependencies:
     "@peculiar/asn1-cms" "^2.0.44"
@@ -2234,6 +2234,11 @@ react-highlight@^0.14.0:
   integrity sha512-kWE+KXOXidS7SABhVopOgMnowbI3RAfeGZbnrduLNlWrYAED8sycL9l/Fvw3w0PFpIIawB7mRDnyhDcM/cIIGA==
   dependencies:
     highlight.js "^10.5.0"
+
+react-hook-form@^7.31.0:
+  version "7.31.0"
+  resolved "https://registry.yarnpkg.com/react-hook-form/-/react-hook-form-7.31.0.tgz#a36d4fd257e08bbb7c141b29159df1eb2f1a3979"
+  integrity sha512-dDZSOk0eRf8z2EFt/XVA+HnmffxMYSWQaVX5EXCp2ozYtqyqrCDdfQRVBoVC43YyKIDtWfbiRcFkMvnvxv9q5g==
 
 react-is@^16.13.1, react-is@^16.7.0:
   version "16.13.1"

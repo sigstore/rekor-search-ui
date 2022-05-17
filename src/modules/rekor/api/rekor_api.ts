@@ -1,11 +1,13 @@
-import { combineLatest, Observable, of } from "rxjs";
+import { combineLatest, from, Observable, of } from "rxjs";
 import { fromFetch } from "rxjs/fetch";
 import { map, switchMap } from "rxjs/operators";
 
 export interface RekorIndexQuery {
 	email?: string;
-	artifact?: string;
-	sha?: string;
+	hash?: string;
+	commitHash?: string;
+	entryUUID?: string;
+	logIndex?: string;
 }
 
 export interface RekorEntry {
@@ -37,9 +39,11 @@ function retrieveIndex(query: RekorIndexQuery): Observable<string[]> {
 	);
 }
 
-function retrieveEntries(logIndex: string) {
+function retrieveEntries(entryUUID?: string, logIndex?: string) {
 	return fromFetch(
-		`https://rekor.sigstore.dev/api/v1/log/entries/${logIndex}`,
+		`https://rekor.sigstore.dev/api/v1/log/entries/${entryUUID}?logIndex=${
+			logIndex ?? ""
+		}`,
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -57,10 +61,52 @@ function retrieveEntries(logIndex: string) {
 	);
 }
 
+async function digestMessage(message: string) {
+	const msgUint8 = new TextEncoder().encode(message);
+	const hashBuffer = await crypto.subtle.digest("SHA-256", msgUint8);
+	const hashArray = Array.from(new Uint8Array(hashBuffer));
+	return hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
+}
+
+async function buildIndexQuery(query: RekorIndexQuery) {
+	return {
+		hash:
+			query.hash ??
+			(query.commitHash && (await digestMessage(query.commitHash))),
+		email: query.email,
+	};
+}
+
 export function rekorRetrieve(
 	query: RekorIndexQuery
 ): Observable<RekorEntries> {
-	return retrieveIndex(query).pipe(
+	if (query.entryUUID || query.logIndex) {
+		return retrieveEntries(query.entryUUID, query.logIndex).pipe(
+			map(result => {
+				const [key, value] = Object.entries(result)[0];
+				return {
+					totalCount: 1,
+					entries: [
+						{
+							key,
+							content: value,
+						},
+					],
+				};
+			})
+		);
+	}
+
+	return from(buildIndexQuery(query)).pipe(
+		map(query => {
+			if ((query.hash?.length ?? 0) > 0) {
+				if (!query.hash?.startsWith("sha256:")) {
+					query.hash = `sha256:${query.hash}`;
+				}
+			}
+			return query;
+		}),
+		switchMap(params => retrieveIndex(params)),
 		map((logIndexes: string[]) => ({
 			totalCount: logIndexes.length,
 			indexes: logIndexes.slice(0, 20),
