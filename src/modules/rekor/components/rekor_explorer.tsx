@@ -1,10 +1,11 @@
+import { RouterRounded } from "@mui/icons-material";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 import { bind, Subscribe } from "@react-rxjs/core";
 import { createSignal, suspend } from "@react-rxjs/utils";
 import { dump, load } from "js-yaml";
 import { useRouter } from "next/router";
 import { Convert } from "pvtsutils";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useCallback, useEffect, useState } from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import Highlight from "react-highlight";
 import {
@@ -128,27 +129,39 @@ export function LoadingIndicator() {
 
 export function RekorExplorer() {
 	const router = useRouter();
-	const attribute = Object.keys(router.query).find(key => isAttribute(key)) as
-		| Attribute
-		| undefined;
-
 	const [formInputs, setFormInputs] = useState<FormInputs>();
 
+	const setQueryParams = useCallback(
+		(formInputs: FormInputs) => {
+			router.push(
+				{
+					pathname: router.pathname,
+					query: {
+						[formInputs.attribute]: formInputs.value,
+					},
+				},
+				`/?${formInputs.attribute}=${formInputs.value}`,
+				{ shallow: true }
+			);
+		},
+		[router]
+	);
+
 	useEffect(() => {
+		const attribute = Object.keys(router.query).find(key =>
+			isAttribute(key)
+		) as Attribute | undefined;
 		const value = attribute && router.query[attribute];
-		if (value && !Array.isArray(value)) {
-			setFormInputs({
-				attribute,
-				value,
-			});
+
+		if (!value || Array.isArray(value)) {
+			return;
 		}
-	}, [attribute, router.query]);
+		setFormInputs({ attribute, value });
+	}, [router.query]);
 
 	useEffect(() => {
 		if (formInputs) {
-			setQuery({
-				[formInputs.attribute]: formInputs.value,
-			});
+			setQuery({ [formInputs.attribute]: formInputs.value });
 		}
 	}, [formInputs]);
 
@@ -156,7 +169,7 @@ export function RekorExplorer() {
 		<div>
 			<RekorSearchForm
 				defaultValues={formInputs}
-				onSubmit={setFormInputs}
+				onSubmit={setQueryParams}
 			/>
 
 			<ErrorBoundary FallbackComponent={ErrorFallback}>
