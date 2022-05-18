@@ -81,17 +81,23 @@ const rulesByAttribute: Record<FormInputs["attribute"], Rules> = {
 			value: 0,
 			message: "Entered value must be larger than 0",
 		},
+		pattern: {
+			value: /^\d+$/,
+			message: "Entered value must be of type int64",
+		},
 	},
 };
 
 export function RekorSearchForm({ defaultValues, onSubmit }: FormProps) {
-	const { handleSubmit, control, watch, setValue } = useForm<FormInputs>({
-		mode: "all",
-		defaultValues: {
-			attribute: "email",
-			value: "",
-		},
-	});
+	const { handleSubmit, control, watch, setValue, trigger } =
+		useForm<FormInputs>({
+			mode: "all",
+			reValidateMode: "onChange",
+			defaultValues: {
+				attribute: "email",
+				value: "",
+			},
+		});
 
 	useEffect(() => {
 		if (defaultValues) {
@@ -102,12 +108,20 @@ export function RekorSearchForm({ defaultValues, onSubmit }: FormProps) {
 
 	const watchAttribute = watch("attribute");
 
+	useEffect(() => {
+		if (control.getFieldState("attribute").isTouched) {
+			trigger();
+		}
+	}, [watchAttribute, trigger, control]);
+
 	const rules = Object.assign(
 		{
 			required: {
 				value: true,
 				message: "A value is required",
 			},
+			pattern: undefined,
+			min: undefined,
 		},
 		rulesByAttribute[watchAttribute]
 	);
