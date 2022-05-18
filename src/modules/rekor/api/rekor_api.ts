@@ -5,8 +5,8 @@ import { map, switchMap } from "rxjs/operators";
 export interface RekorIndexQuery {
 	email?: string;
 	hash?: string;
-	commitHash?: string;
-	entryUUID?: string;
+	commitSha?: string;
+	uuid?: string;
 	logIndex?: string;
 }
 
@@ -41,9 +41,9 @@ function retrieveIndex(query: RekorIndexQuery): Observable<string[]> {
 
 function retrieveEntries(entryUUID?: string, logIndex?: string) {
 	return fromFetch(
-		`https://rekor.sigstore.dev/api/v1/log/entries/${entryUUID}?logIndex=${
-			logIndex ?? ""
-		}`,
+		`https://rekor.sigstore.dev/api/v1/log/entries${
+			entryUUID ? "/" + entryUUID : ""
+		}?logIndex=${logIndex ?? ""}`,
 		{
 			headers: {
 				"Content-Type": "application/json",
@@ -71,8 +71,7 @@ async function digestMessage(message: string) {
 async function buildIndexQuery(query: RekorIndexQuery) {
 	return {
 		hash:
-			query.hash ??
-			(query.commitHash && (await digestMessage(query.commitHash))),
+			query.hash ?? (query.commitSha && (await digestMessage(query.commitSha))),
 		email: query.email,
 	};
 }
@@ -80,8 +79,8 @@ async function buildIndexQuery(query: RekorIndexQuery) {
 export function rekorRetrieve(
 	query: RekorIndexQuery
 ): Observable<RekorEntries> {
-	if (query.entryUUID || query.logIndex) {
-		return retrieveEntries(query.entryUUID, query.logIndex).pipe(
+	if (query.uuid || query.logIndex) {
+		return retrieveEntries(query.uuid, query.logIndex).pipe(
 			map(result => {
 				const [key, value] = Object.entries(result)[0];
 				return {
