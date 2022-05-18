@@ -8,17 +8,31 @@ import {
 	TextField,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { useMemo } from "react";
+import { useEffect } from "react";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
 
 export interface FormProps {
+	defaultValues?: FormInputs;
 	onSubmit: (query: FormInputs) => void;
 }
 
-const TYPES = ["email", "hash", "commitSha", "uuid", "logIndex"] as const;
+export const ATTRIBUTES = [
+	"email",
+	"hash",
+	"commitSha",
+	"uuid",
+	"logIndex",
+] as const;
+const ATTRIBUTES_SET = new Set<string>(ATTRIBUTES);
+
+export type Attribute = typeof ATTRIBUTES[number];
+
+export function isAttribute(input: string): input is Attribute {
+	return ATTRIBUTES_SET.has(input);
+}
 
 export interface FormInputs {
-	type: typeof TYPES[number];
+	attribute: Attribute;
 	value: string;
 }
 
@@ -27,14 +41,14 @@ type Rules = Omit<
 	"valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
 >;
 
-const nameByType: Record<FormInputs["type"], string> = {
+const nameByAttribute: Record<FormInputs["attribute"], string> = {
 	email: "Email",
 	hash: "Hash",
 	commitSha: "Commit SHA",
 	uuid: "Entry UUID",
 	logIndex: "Log Index",
 };
-const rulesByType: Record<FormInputs["type"], Rules> = {
+const rulesByAttribute: Record<FormInputs["attribute"], Rules> = {
 	email: {
 		pattern: {
 			value: /\S+@\S+\.\S+/,
@@ -70,16 +84,23 @@ const rulesByType: Record<FormInputs["type"], Rules> = {
 	},
 };
 
-export function RekorSearchForm({ onSubmit }: FormProps) {
-	const { handleSubmit, control, watch } = useForm<FormInputs>({
+export function RekorSearchForm({ defaultValues, onSubmit }: FormProps) {
+	const { handleSubmit, control, watch, setValue } = useForm<FormInputs>({
 		mode: "all",
 		defaultValues: {
-			type: "email",
+			attribute: "email",
 			value: "",
 		},
 	});
 
-	const watchType = watch("type");
+	useEffect(() => {
+		if (defaultValues) {
+			setValue("attribute", defaultValues.attribute);
+			setValue("value", defaultValues.value);
+		}
+	}, [defaultValues, setValue]);
+
+	const watchAttribute = watch("attribute");
 
 	const rules = Object.assign(
 		{
@@ -88,7 +109,7 @@ export function RekorSearchForm({ onSubmit }: FormProps) {
 				message: "A value is required",
 			},
 		},
-		rulesByType[watchType]
+		rulesByAttribute[watchAttribute]
 	);
 
 	return (
@@ -104,26 +125,28 @@ export function RekorSearchForm({ onSubmit }: FormProps) {
 						md={2}
 					>
 						<Controller
-							name="type"
+							name="attribute"
 							control={control}
 							render={({ field }) => (
 								<FormControl
 									fullWidth
 									size="small"
 								>
-									<InputLabel id="rekor-search-type-label">Field</InputLabel>
+									<InputLabel id="rekor-search-type-label">
+										Attribute
+									</InputLabel>
 									<Select
 										labelId="rekor-search-type-label"
 										id="rekor-search-type"
 										{...field}
-										label="Field"
+										label="Attribute"
 									>
-										{TYPES.map(value => (
+										{ATTRIBUTES.map(attribute => (
 											<MenuItem
-												key={value}
-												value={value}
+												key={attribute}
+												value={attribute}
 											>
-												{nameByType[value]}
+												{nameByAttribute[attribute]}
 											</MenuItem>
 										))}
 									</Select>
@@ -145,7 +168,7 @@ export function RekorSearchForm({ onSubmit }: FormProps) {
 									sx={{ width: 1 }}
 									size="small"
 									{...field}
-									label={nameByType[watchType]}
+									label={nameByAttribute[watchAttribute]}
 									error={!!fieldState.error}
 									helperText={fieldState.error?.message}
 								/>
