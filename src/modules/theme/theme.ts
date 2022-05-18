@@ -1,5 +1,4 @@
 import { createTheme } from "@mui/material/styles";
-// import InterFont from './inter.ttf';
 
 export const REKOR_SEARCH_THEME = createTheme({
 	typography: {

@@ -1,3 +1,4 @@
+import { InputOutlined } from "@mui/icons-material";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 import { bind, Subscribe } from "@react-rxjs/core";
 import { createSignal, suspend } from "@react-rxjs/utils";
@@ -15,7 +16,7 @@ import {
 } from "rxjs/operators";
 import { useDestroyed$ } from "../../utils/rxjs";
 import { RekorIndexQuery, rekorRetrieve } from "../api/rekor_api";
-import { RekorSearchForm } from "./search_form";
+import { FormInputs, RekorSearchForm } from "./search_form";
 
 const [queryChange$, setQuery] = createSignal<RekorIndexQuery>();
 
@@ -121,9 +122,17 @@ export function LoadingIndicator() {
 }
 
 export function RekorExplorer() {
+	function createQueryFromFormInput(input: FormInputs): RekorIndexQuery {
+		return {
+			[input.type]: input.value,
+		};
+	}
+
 	return (
 		<div>
-			<RekorSearchForm onSubmit={query => setQuery(query)} />
+			<RekorSearchForm
+				onSubmit={query => setQuery(createQueryFromFormInput(query))}
+			/>
 
 			<ErrorBoundary FallbackComponent={ErrorFallback}>
 				<Suspense fallback={<LoadingIndicator />}>
