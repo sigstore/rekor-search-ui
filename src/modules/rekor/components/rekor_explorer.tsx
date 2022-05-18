@@ -1,10 +1,10 @@
-import { InputOutlined } from "@mui/icons-material";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 import { bind, Subscribe } from "@react-rxjs/core";
 import { createSignal, suspend } from "@react-rxjs/utils";
 import { dump, load } from "js-yaml";
+import { useRouter } from "next/router";
 import { Convert } from "pvtsutils";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import Highlight from "react-highlight";
 import {
@@ -16,7 +16,12 @@ import {
 } from "rxjs/operators";
 import { useDestroyed$ } from "../../utils/rxjs";
 import { RekorIndexQuery, rekorRetrieve } from "../api/rekor_api";
-import { FormInputs, RekorSearchForm } from "./search_form";
+import {
+	Attribute,
+	FormInputs,
+	isAttribute,
+	RekorSearchForm,
+} from "./search_form";
 
 const [queryChange$, setQuery] = createSignal<RekorIndexQuery>();
 
@@ -122,16 +127,36 @@ export function LoadingIndicator() {
 }
 
 export function RekorExplorer() {
-	function createQueryFromFormInput(input: FormInputs): RekorIndexQuery {
-		return {
-			[input.type]: input.value,
-		};
-	}
+	const router = useRouter();
+	const attribute = Object.keys(router.query).find(key => isAttribute(key)) as
+		| Attribute
+		| undefined;
+
+	const [formInputs, setFormInputs] = useState<FormInputs>();
+
+	useEffect(() => {
+		const value = attribute && router.query[attribute];
+		if (value && !Array.isArray(value)) {
+			setFormInputs({
+				attribute,
+				value,
+			});
+		}
+	}, [attribute, router.query]);
+
+	useEffect(() => {
+		if (formInputs) {
+			setQuery({
+				[formInputs.attribute]: formInputs.value,
+			});
+		}
+	}, [formInputs]);
 
 	return (
 		<div>
 			<RekorSearchForm
-				onSubmit={query => setQuery(createQueryFromFormInput(query))}
+				defaultValues={formInputs}
+				onSubmit={setFormInputs}
 			/>
 
 			<ErrorBoundary FallbackComponent={ErrorFallback}>
