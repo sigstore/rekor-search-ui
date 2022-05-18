@@ -1,0 +1,59 @@
+# Copyright 2022 Chainguard, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+name: 🐶 reviewdog
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  eslint:
+    name: ESLint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 14
+          cache: yarn
+      - name: Install modules
+        run: yarn
+      - uses: reviewdog/action-eslint@v1
+        with:
+          reporter: github-check
+          eslint_flags: "src/"
+
+  action-lint:
+    name: Action lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Find yamls
+        id: get_yamls
+        run: |
+          yamls=$(find .github -name "*.y*ml" | grep -v dependabot.)
+          echo "::set-output name=files::${yamls}"
+      - name: Action lint
+        uses: reviewdog/action-actionlint@v1
+        with:
+          actionlint_flags: ${{ steps.get_yamls.outputs.files }}
+
+  spacing:
+    name: Spacing
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: chainguard-dev/actions/trailing-space@main
+      - uses: chainguard-dev/actions/eof-newline@main
+
+  donotsubmit:
+    name: Do not submit
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - uses: chainguard-dev/actions/donotsubmit@main

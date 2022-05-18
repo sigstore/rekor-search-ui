@@ -1,0 +1,22 @@
+# Copyright 2022 Chainguard, Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+name: Format
+
+on:
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  prettier:
+    name: Prettier
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Check prettify code
+        uses: creyD/prettier_action@v4.2
+        with:
+          dry: true
+          prettier_options: --check .
+          only_changed: True
