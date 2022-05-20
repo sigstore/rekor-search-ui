@@ -1,3 +1,4 @@
+import moment from 'moment';
 import { RouterRounded } from "@mui/icons-material";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 import { bind, Subscribe } from "@react-rxjs/core";
@@ -58,7 +59,8 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 const DUMP_OPTIONS: jsyaml.DumpOptions = {
 	replacer: (key, value) => {
 		if (key === "integratedTime") {
-			return new Date(value * 1000);
+			let date = new Date(value * 1000)
+			return moment(date).format() + ' (' + moment().to(date) + ')';
 		}
 		if (key === "verification") {
 			return "<omitted>";
