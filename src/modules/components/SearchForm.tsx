@@ -10,25 +10,11 @@ import {
 import Paper from "@mui/material/Paper";
 import { useEffect } from "react";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
+import { Attribute, ATTRIBUTES } from "../api/rekor_api";
 
 export interface FormProps {
 	defaultValues?: FormInputs;
 	onSubmit: (query: FormInputs) => void;
-}
-
-export const ATTRIBUTES = [
-	"email",
-	"hash",
-	"commitSha",
-	"uuid",
-	"logIndex",
-] as const;
-const ATTRIBUTES_SET = new Set<string>(ATTRIBUTES);
-
-export type Attribute = typeof ATTRIBUTES[number];
-
-export function isAttribute(input: string): input is Attribute {
-	return ATTRIBUTES_SET.has(input);
 }
 
 export interface FormInputs {
@@ -88,7 +74,7 @@ const rulesByAttribute: Record<FormInputs["attribute"], Rules> = {
 	},
 };
 
-export function RekorSearchForm({ defaultValues, onSubmit }: FormProps) {
+export function SearchForm({ defaultValues, onSubmit }: FormProps) {
 	const { handleSubmit, control, watch, setValue, trigger } =
 		useForm<FormInputs>({
 			mode: "all",
@@ -136,7 +122,6 @@ export function RekorSearchForm({ defaultValues, onSubmit }: FormProps) {
 					<Grid
 						item
 						xs={4}
-						md={2}
 					>
 						<Controller
 							name="attribute"
@@ -171,7 +156,7 @@ export function RekorSearchForm({ defaultValues, onSubmit }: FormProps) {
 					<Grid
 						item
 						xs={8}
-						md={8}
+						md={6}
 					>
 						<Controller
 							name="value"

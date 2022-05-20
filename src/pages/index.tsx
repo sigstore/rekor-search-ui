@@ -9,7 +9,7 @@ import {
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
-import { RekorExplorer } from "../modules/rekor/components/rekor_explorer";
+import { Explorer } from "../modules/components/Explorer";
 import { REKOR_SEARCH_THEME } from "../modules/theme/theme";
 
 const Home: NextPage = () => {
@@ -75,7 +75,7 @@ const Home: NextPage = () => {
 						</a>
 					</Box>
 
-					<RekorExplorer />
+					<Explorer />
 
 					<Box
 						component="footer"

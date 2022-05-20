@@ -16,21 +16,21 @@ import {
 	takeUntil,
 	throttleTime,
 } from "rxjs/operators";
-import { useDestroyed$ } from "../../utils/rxjs";
-import { RekorIndexQuery, rekorRetrieve } from "../api/rekor_api";
+import { useDestroyed$ } from "../utils/rxjs";
 import {
 	Attribute,
-	FormInputs,
 	isAttribute,
-	RekorSearchForm,
-} from "./search_form";
+	SearchQuery,
+	rekorRetrieve,
+} from "../api/rekor_api";
+import { FormInputs, SearchForm } from "./SearchForm";
 
-const [queryChange$, setQuery] = createSignal<RekorIndexQuery>();
+const [queryChange$, setQuery] = createSignal<SearchQuery>();
 
 const [useRekorIndexList, rekorIndexList$] = bind(
 	queryChange$.pipe(
 		throttleTime(200),
-		switchMap(query => suspend(rekorRetrieve(query as RekorIndexQuery))),
+		switchMap(query => suspend(rekorRetrieve(query))),
 		startWith(undefined)
 	)
 );
@@ -107,7 +107,7 @@ export function RekorList() {
 					key={`${entry.key}`}
 					className="yaml"
 				>
-					{dump(entry.content, DUMP_OPTIONS)}
+					{dump(Object.values(entry)[0], DUMP_OPTIONS)}
 				</Highlight>
 			))}
 		</>
@@ -129,7 +129,7 @@ export function LoadingIndicator() {
 	);
 }
 
-export function RekorExplorer() {
+export function Explorer() {
 	const router = useRouter();
 	const [formInputs, setFormInputs] = useState<FormInputs>();
 
@@ -163,13 +163,29 @@ export function RekorExplorer() {
 
 	useEffect(() => {
 		if (formInputs) {
-			setQuery({ [formInputs.attribute]: formInputs.value });
+			switch (formInputs.attribute) {
+				case "logIndex":
+					const query = parseInt(formInputs.value);
+					if (!isNaN(query)) {
+						// Ignore invalid numbers.
+						setQuery({
+							attribute: formInputs.attribute,
+							query,
+						});
+					}
+					break;
+				default:
+					setQuery({
+						attribute: formInputs.attribute,
+						query: formInputs.value,
+					});
+			}
 		}
 	}, [formInputs]);
 
 	return (
 		<div>
-			<RekorSearchForm
+			<SearchForm
 				defaultValues={formInputs}
 				onSubmit={setQueryParams}
 			/>
