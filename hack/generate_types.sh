@@ -29,15 +29,23 @@ generate_types() {
 		"RPM:v0.0.1"
 		"TUF:v0.0.1"
 	)
+	DIR="src/modules/api/generated/types"
 
 	echo ">> Generating pluggable types ..."
+	mkdir -p "${DIR}"
 	for TYPE in "${PLUGGABLE_TYPES[@]}" ; do
 			NAME=${TYPE%%:*}
 			VERSION=${TYPE#*:}
 			echo "... ${NAME} @ ${VERSION}"
-			quicktype --lang ts --src-lang schema --top-level "${NAME}" "https://raw.githubusercontent.com/sigstore/rekor/main/pkg/types/${NAME,,}/${VERSION}/${NAME,,}_${VERSION//\./_}_schema.json" --out "src/modules/rekor/types/${NAME,,}.ts"
+			quicktype --lang ts --src-lang schema --top-level "${NAME}" "https://raw.githubusercontent.com/sigstore/rekor/main/pkg/types/${NAME,,}/${VERSION}/${NAME,,}_${VERSION//\./_}_schema.json" --out "src/modules/api/generated/types/${NAME,,}.ts"
 	done
 }
 
+generate_api() {
+	yarn openapi --input "https://raw.githubusercontent.com/sigstore/rekor/main/openapi.yaml" --output "src/modules/api/generated"
+	sed -i "" "s/http/https/" "src/modules/api/generated/core/OpenAPI.ts"
+}
+
 validate_deps
+generate_api
 generate_types
