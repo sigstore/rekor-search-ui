@@ -1,14 +1,9 @@
-import moment from "moment";
-import { RouterRounded } from "@mui/icons-material";
 import { Alert, Box, CircularProgress, Typography } from "@mui/material";
 import { bind, Subscribe } from "@react-rxjs/core";
 import { createSignal, suspend } from "@react-rxjs/utils";
-import { dump, load } from "js-yaml";
 import { useRouter } from "next/router";
-import { Convert } from "pvtsutils";
 import { Suspense, useCallback, useEffect, useState } from "react";
 import { ErrorBoundary, FallbackProps } from "react-error-boundary";
-import Highlight from "react-highlight";
 import {
 	skip,
 	startWith,
@@ -16,13 +11,14 @@ import {
 	takeUntil,
 	throttleTime,
 } from "rxjs/operators";
-import { useDestroyed$ } from "../utils/rxjs";
 import {
 	Attribute,
 	isAttribute,
-	SearchQuery,
 	rekorRetrieve,
+	SearchQuery,
 } from "../api/rekor_api";
+import { useDestroyed$ } from "../utils/rxjs";
+import { Entry } from "./Entry";
 import { FormInputs, SearchForm } from "./SearchForm";
 
 const [queryChange$, setQuery] = createSignal<SearchQuery>();
@@ -56,28 +52,7 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 	);
 }
 
-const DUMP_OPTIONS: jsyaml.DumpOptions = {
-	replacer: (key, value) => {
-		if (key === "integratedTime") {
-			const date = new Date(value * 1000);
-			return `${moment(date).format()} (${moment().to(date)})`;
-		}
-		if (key === "verification") {
-			return "<omitted>";
-		}
-
-		if (Convert.isBase64(value)) {
-			try {
-				return load(window.atob(value));
-			} catch (e) {
-				return value;
-			}
-		}
-		return value;
-	},
-};
-
-export function RekorList() {
+function RekorList() {
 	const rekorEntries = useRekorIndexList();
 
 	if (!rekorEntries) {
@@ -103,18 +78,16 @@ export function RekorList() {
 			</Typography>
 
 			{rekorEntries.entries.map(entry => (
-				<Highlight
-					key={`${entry.key}`}
-					className="yaml"
-				>
-					{dump(Object.values(entry)[0], DUMP_OPTIONS)}
-				</Highlight>
+				<Entry
+					key={Object.values(entry)[0].logIndex}
+					entry={entry}
+				/>
 			))}
 		</>
 	);
 }
 
-export function LoadingIndicator() {
+function LoadingIndicator() {
 	return (
 		<Box
 			sx={{
