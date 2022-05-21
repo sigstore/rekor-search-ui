@@ -3,8 +3,14 @@ import { createTheme } from "@mui/material/styles";
 export const REKOR_SEARCH_THEME = createTheme({
 	typography: {
 		fontFamily: ["Inter", "sans-serif"].join(","),
+		h4: {
+			fontWeight: 300,
+			fontSize: "1.5rem",
+			color: "#444444",
+		},
 		h5: {
 			fontWeight: 300,
+			fontSize: "0.9rem",
 			color: "#444444",
 		},
 	},

@@ -3,6 +3,7 @@ import {
 	Card,
 	CardActionArea,
 	Container,
+	CssBaseline,
 	ThemeProvider,
 	Typography,
 } from "@mui/material";
@@ -28,6 +29,7 @@ const Home: NextPage = () => {
 			</Head>
 
 			<ThemeProvider theme={REKOR_SEARCH_THEME}>
+				<CssBaseline />
 				<Container
 					sx={{
 						mt: 3,
@@ -49,7 +51,7 @@ const Home: NextPage = () => {
 								alignItems: "center",
 								gap: 2,
 							}}
-							variant="h5"
+							variant="h4"
 							component="h1"
 						>
 							<Image
