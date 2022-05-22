@@ -1,7 +1,4 @@
-import CheckCircleOutlinedIcon from "@mui/icons-material/CheckCircleOutlined";
-import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
 	Accordion,
 	AccordionDetails as MuiAccordionDetails,
@@ -133,7 +130,7 @@ export function Entry({ entry }: { entry: LogEntry }) {
 	const attestation = tryJSONParse(rawAttestation);
 
 	return (
-		<Paper sx={{ my: 1, p: 1 }}>
+		<Paper sx={{ mb: 2, p: 1 }}>
 			<Typography
 				variant="h5"
 				component="h2"
@@ -157,7 +154,6 @@ export function Entry({ entry }: { entry: LogEntry }) {
 					item
 					xs={6}
 					sm={3}
-					md={2}
 				>
 					<Card
 						title="Type"
@@ -171,7 +167,6 @@ export function Entry({ entry }: { entry: LogEntry }) {
 					item
 					xs={6}
 					sm={3}
-					md={2}
 				>
 					<Card
 						title="Log Index"
@@ -180,60 +175,8 @@ export function Entry({ entry }: { entry: LogEntry }) {
 				</Grid>
 				<Grid
 					item
-					xs={6}
-					sm={3}
-					md={2}
-				>
-					<Card
-						title="Verification"
-						content={
-							obj.verification ? (
-								<>
-									<CheckCircleOutlinedIcon color="success" />
-									<SecondarySpan color="success">Found</SecondarySpan>
-								</>
-							) : (
-								<>
-									<ErrorOutlineIcon color="error" />
-									<SecondarySpan>Missing</SecondarySpan>
-								</>
-							)
-						}
-						dividerSx={{
-							display: {
-								xs: "none",
-								sm: "block",
-							},
-						}}
-					/>
-				</Grid>
-				<Grid
-					item
-					xs={6}
-					sm={3}
-					md={2}
-				>
-					<Card
-						title="Attestation"
-						content={
-							attestation ? (
-								<>
-									<CheckCircleOutlinedIcon color="info" />
-									<SecondarySpan>Found</SecondarySpan>
-								</>
-							) : (
-								<>
-									<InfoOutlinedIcon color="info" />
-									<SecondarySpan>None</SecondarySpan>
-								</>
-							)
-						}
-					/>
-				</Grid>
-				<Grid
-					item
 					xs={12}
-					md={4}
+					sm={6}
 				>
 					<Card
 						title="Integrated time"
@@ -245,7 +188,7 @@ export function Entry({ entry }: { entry: LogEntry }) {
 						dividerSx={{
 							display: {
 								xs: "none",
-								md: "block",
+								sm: "block",
 							},
 						}}
 					/>

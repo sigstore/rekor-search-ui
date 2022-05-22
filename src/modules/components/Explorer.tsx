@@ -73,7 +73,7 @@ function RekorList() {
 
 	return (
 		<>
-			<Typography sx={{ mt: 2 }}>
+			<Typography sx={{ my: 2 }}>
 				Showing {rekorEntries.entries.length} of {rekorEntries?.totalCount}
 			</Typography>
 
