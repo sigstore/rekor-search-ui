@@ -17,10 +17,6 @@ class AppDocument extends Document {
 						rel="stylesheet"
 						href="https://fonts.googleapis.com/icon?family=Material+Icons"
 					/>
-					<link
-						rel="stylesheet"
-						href="/monokai-sublime.css"
-					></link>
 				</Head>
 				<body>
 					<Main />

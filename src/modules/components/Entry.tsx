@@ -12,11 +12,14 @@ import {
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { dump, load } from "js-yaml";
-import moment from "moment";
 import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
-import Highlight from "react-highlight";
+import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
+import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { LogEntry } from "../api/generated";
+import { HashedRekord } from "../api/generated/types/hashedrekord";
+import { toRelativeDateString } from "../utils/date";
+import { HashedRekordViewer } from "./HashedRekord";
 
 const DUMP_OPTIONS: jsyaml.DumpOptions = {
 	replacer: (key, value) => {
@@ -30,6 +33,25 @@ const DUMP_OPTIONS: jsyaml.DumpOptions = {
 		return value;
 	},
 };
+
+const AccordionDetails = styled(MuiAccordionDetails)({
+	padding: 0,
+});
+
+/**
+ * Return a parsed JSON object of the provided content.
+ * If an error occurs, the provided content is returned as a raw string.
+ */
+function tryJSONParse(content?: string): unknown {
+	if (!content) {
+		return content;
+	}
+	try {
+		return JSON.parse(content);
+	} catch (e) {
+		return content;
+	}
+}
 
 export function Card({
 	title,
@@ -79,45 +101,13 @@ export function Card({
 	);
 }
 
-const SecondarySpan = styled("span")(({ theme }) => ({
-	color: theme.palette.info.main,
-	paddingInlineStart: theme.spacing(1),
-}));
-
-const AccordionDetails = styled(MuiAccordionDetails)({
-	padding: 0,
-});
-
-function RelativeDate({ date }: { date: Date }) {
-	return (
-		<>
-			{moment().to(date)}
-			<SecondarySpan>({moment(date).format()})</SecondarySpan>
-		</>
-	);
-}
-
-/**
- * Return a parsed JSON object of the provided content.
- * If an error occurs, the provided content is returned as a raw string.
- */
-function tryJSONParse(content?: string): unknown {
-	if (!content) {
-		return content;
-	}
-	try {
-		return JSON.parse(content);
-	} catch (e) {
-		return content;
-	}
-}
-
 export function Entry({ entry }: { entry: LogEntry }) {
 	const [uuid, obj] = Object.entries(entry)[0];
 
 	const body = JSON.parse(window.atob(obj.body)) as {
 		kind: string;
-		spec: string;
+		apiVersion: string;
+		spec: unknown;
 	};
 
 	// Extract the JSON payload of the attestation. Some attestations appear to be
@@ -129,8 +119,18 @@ export function Entry({ entry }: { entry: LogEntry }) {
 	}
 	const attestation = tryJSONParse(rawAttestation);
 
+	let parsed: ReactNode | undefined;
+	switch (body.kind) {
+		case "hashedrekord":
+			parsed = <HashedRekordViewer hashedRekord={body.spec as HashedRekord} />;
+			break;
+	}
+
 	return (
-		<Paper sx={{ mb: 2, p: 1 }}>
+		<Paper
+			sx={{ mb: 2, p: 1 }}
+			elevation={4}
+		>
 			<Typography
 				variant="h5"
 				component="h2"
@@ -180,11 +180,7 @@ export function Entry({ entry }: { entry: LogEntry }) {
 				>
 					<Card
 						title="Integrated time"
-						content={
-							<span>
-								<RelativeDate date={new Date(obj.integratedTime * 1000)} />
-							</span>
-						}
+						content={toRelativeDateString(new Date(obj.integratedTime * 1000))}
 						dividerSx={{
 							display: {
 								xs: "none",
@@ -194,20 +190,49 @@ export function Entry({ entry }: { entry: LogEntry }) {
 					/>
 				</Grid>
 			</Grid>
-			<Highlight className="yaml">{dump(body.spec, DUMP_OPTIONS)}</Highlight>
+			<Divider
+				flexItem
+				sx={{ my: 1 }}
+			/>
+			{parsed}
 			<Box sx={{ mt: 1 }}>
 				<>
+					<Accordion
+						disableGutters
+						defaultExpanded={!parsed}
+					>
+						<AccordionSummary
+							expandIcon={<ExpandMoreIcon />}
+							aria-controls="body-content"
+							id="body-header"
+						>
+							<Typography>Raw Body</Typography>
+						</AccordionSummary>
+						<AccordionDetails>
+							<SyntaxHighlighter
+								language="yaml"
+								style={atomDark}
+							>
+								{dump(body, DUMP_OPTIONS)}
+							</SyntaxHighlighter>
+						</AccordionDetails>
+					</Accordion>
 					{attestation && (
 						<Accordion disableGutters>
 							<AccordionSummary
 								expandIcon={<ExpandMoreIcon />}
-								aria-controls="panel2a-content"
-								id="panel2a-header"
+								aria-controls="attestation-content"
+								id="attestation-header"
 							>
 								<Typography>Attestation</Typography>
 							</AccordionSummary>
 							<AccordionDetails>
-								<Highlight className="yaml">{dump(attestation)}</Highlight>
+								<SyntaxHighlighter
+									language="yaml"
+									style={atomDark}
+								>
+									{dump(attestation)}
+								</SyntaxHighlighter>
 							</AccordionDetails>
 						</Accordion>
 					)}
@@ -215,13 +240,18 @@ export function Entry({ entry }: { entry: LogEntry }) {
 						<Accordion disableGutters>
 							<AccordionSummary
 								expandIcon={<ExpandMoreIcon />}
-								aria-controls="panel2a-content"
-								id="panel2a-header"
+								aria-controls="verification-content"
+								id="verification-header"
 							>
 								<Typography>Verification</Typography>
 							</AccordionSummary>
 							<AccordionDetails>
-								<Highlight className="yaml">{dump(obj.verification)}</Highlight>
+								<SyntaxHighlighter
+									language="yaml"
+									style={atomDark}
+								>
+									{dump(obj.verification)}
+								</SyntaxHighlighter>
 							</AccordionDetails>
 						</Accordion>
 					)}
