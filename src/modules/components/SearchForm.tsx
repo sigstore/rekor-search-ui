@@ -8,7 +8,7 @@ import {
 	TextField,
 } from "@mui/material";
 import Paper from "@mui/material/Paper";
-import { useEffect } from "react";
+import { ReactNode, useEffect } from "react";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
 import { Attribute, ATTRIBUTES } from "../api/rekor_api";
 
@@ -27,49 +27,79 @@ type Rules = Omit<
 	"valueAsNumber" | "valueAsDate" | "setValueAs" | "disabled"
 >;
 
-const nameByAttribute: Record<FormInputs["attribute"], string> = {
-	email: "Email",
-	hash: "Hash",
-	commitSha: "Commit SHA",
-	uuid: "Entry UUID",
-	logIndex: "Log Index",
-};
-const rulesByAttribute: Record<FormInputs["attribute"], Rules> = {
+interface InputConfig {
+	name: string;
+	helperText?: ReactNode;
+	rules: Rules;
+}
+
+const inputConfigByAttribute: Record<FormInputs["attribute"], InputConfig> = {
 	email: {
-		pattern: {
-			value: /\S+@\S+\.\S+/,
-			message: "Entered value does not match the email format: 'S+@S+.S+'",
+		name: "Email",
+		rules: {
+			pattern: {
+				value: /\S+@\S+\.\S+/,
+				message: "Entered value does not match the email format: 'S+@S+.S+'",
+			},
 		},
 	},
 	hash: {
-		pattern: {
-			value: /^(sha256:)?[0-9a-fA-F]{64}$|^(sha1:)?[0-9a-fA-F]{40}$/,
-			message:
-				"Entered value does not match the hash format: '^(sha256:)?[0-9a-fA-F]{64}$|^(sha1:)?[0-9a-fA-F]{40}$'",
+		name: "Hash",
+		rules: {
+			pattern: {
+				value: /^(sha256:)?[0-9a-fA-F]{64}$|^(sha1:)?[0-9a-fA-F]{40}$/,
+				message:
+					"Entered value does not match the hash format: '^(sha256:)?[0-9a-fA-F]{64}$|^(sha1:)?[0-9a-fA-F]{40}$'",
+			},
 		},
 	},
 	commitSha: {
-		pattern: {
-			value: /^[0-9a-fA-F]{40}$/,
-			message:
-				"Entered value does not match the commit SHA format: '^[0-9a-fA-F]{40}$'",
+		name: "Commit SHA",
+		helperText: (
+			<>
+				Only compatible with{" "}
+				<a
+					href="https://github.com/sigstore/gitsign"
+					target="_blank"
+					rel="noopener noreferrer"
+					style={{
+						textDecoration: "underline",
+					}}
+				>
+					sigstore/gitsign
+				</a>{" "}
+				entries
+			</>
+		),
+		rules: {
+			pattern: {
+				value: /^[0-9a-fA-F]{40}$/,
+				message:
+					"Entered value does not match the commit SHA format: '^[0-9a-fA-F]{40}$'",
+			},
 		},
 	},
 	uuid: {
-		pattern: {
-			value: /^[0-9a-fA-F]{64}|[0-9a-fA-F]{80}$/,
-			message:
-				"Entered value does not match the entry UUID format: '^[0-9a-fA-F]{64}|[0-9a-fA-F]{80}$'",
+		name: "Entry UUID",
+		rules: {
+			pattern: {
+				value: /^[0-9a-fA-F]{64}|[0-9a-fA-F]{80}$/,
+				message:
+					"Entered value does not match the entry UUID format: '^[0-9a-fA-F]{64}|[0-9a-fA-F]{80}$'",
+			},
 		},
 	},
 	logIndex: {
-		min: {
-			value: 0,
-			message: "Entered value must be larger than 0",
-		},
-		pattern: {
-			value: /^\d+$/,
-			message: "Entered value must be of type int64",
+		name: "Log Index",
+		rules: {
+			min: {
+				value: 0,
+				message: "Entered value must be larger than 0",
+			},
+			pattern: {
+				value: /^\d+$/,
+				message: "Entered value must be of type int64",
+			},
 		},
 	},
 };
@@ -109,7 +139,7 @@ export function SearchForm({ defaultValues, onSubmit }: FormProps) {
 			pattern: undefined,
 			min: undefined,
 		},
-		rulesByAttribute[watchAttribute]
+		inputConfigByAttribute[watchAttribute].rules
 	);
 
 	return (
@@ -145,7 +175,7 @@ export function SearchForm({ defaultValues, onSubmit }: FormProps) {
 												key={attribute}
 												value={attribute}
 											>
-												{nameByAttribute[attribute]}
+												{inputConfigByAttribute[attribute].name}
 											</MenuItem>
 										))}
 									</Select>
@@ -167,9 +197,12 @@ export function SearchForm({ defaultValues, onSubmit }: FormProps) {
 									sx={{ width: 1 }}
 									size="small"
 									{...field}
-									label={nameByAttribute[watchAttribute]}
+									label={inputConfigByAttribute[watchAttribute].name}
 									error={!!fieldState.error}
-									helperText={fieldState.error?.message}
+									helperText={
+										fieldState.error?.message ||
+										inputConfigByAttribute[watchAttribute].helperText
+									}
 								/>
 							)}
 						/>
