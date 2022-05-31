@@ -14,6 +14,15 @@ export function HashedRekordViewer({
 		hashedRekord.signature.publicKey?.content || ""
 	);
 
+	const publicKey = {
+		title: "Public Key",
+		content: certContent,
+	};
+	if (certContent.includes("BEGIN CERTIFICATE")) {
+		publicKey.title = "Public Key Certificate";
+		publicKey.content = dump(decodex509(certContent));
+	}
+
 	return (
 		<Box>
 			<Typography
@@ -44,13 +53,13 @@ export function HashedRekordViewer({
 				variant="h5"
 				sx={{ py: 1 }}
 			>
-				Certificate
+				{publicKey.title}
 			</Typography>
 			<SyntaxHighlighter
 				language="yaml"
 				style={atomDark}
 			>
-				{dump(decodex509(certContent))}
+				{publicKey.content}
 			</SyntaxHighlighter>
 		</Box>
 	);
