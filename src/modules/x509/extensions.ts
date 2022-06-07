@@ -25,7 +25,7 @@ function textDecoder(rawExtension: Extension) {
  */
 export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 	"2.5.29.14": {
-		name: "X509v3 Subject Key Identifier",
+		name: "Subject Key Identifier",
 		toJSON(rawExtension: Extension) {
 			const ext = new SubjectKeyIdentifierExtension(rawExtension.rawData);
 			return [
@@ -37,7 +37,7 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 		},
 	},
 	"2.5.29.15": {
-		name: "X509v3 Key Usage",
+		name: "Key Usage",
 		toJSON(rawExtension: Extension) {
 			const ext = new KeyUsagesExtension(rawExtension.rawData);
 			const usages: string[] = [];
@@ -52,13 +52,13 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 		},
 	},
 	"2.5.29.17": {
-		name: "X509v3 Subject Alternative Name",
+		name: "Subject Alternative Name",
 		toJSON(rawExtension: Extension) {
 			return new SubjectAlternativeNameExtension(rawExtension.rawData).toJSON();
 		},
 	},
 	"2.5.29.19": {
-		name: "X509v3 Basic Constraints",
+		name: "Basic Constraints",
 		toJSON(rawExtension: Extension) {
 			const ext = new BasicConstraintsExtension(rawExtension.rawData);
 			return {
@@ -67,7 +67,7 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 		},
 	},
 	"2.5.29.35": {
-		name: "X509v3 Authority Key Identifier",
+		name: "Authority Key Identifier",
 		toJSON(rawExtension: Extension) {
 			const ext = new AuthorityKeyIdentifierExtension(rawExtension.rawData);
 			return {
@@ -80,7 +80,7 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 		},
 	},
 	"2.5.29.37": {
-		name: "X509v3 Extended Key Usage",
+		name: "Extended Key Usage",
 		toJSON(rawExtension: Extension) {
 			const ext = new ExtendedKeyUsageExtension(rawExtension.rawData);
 			return ext.usages.map(code => {
@@ -97,27 +97,27 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 	 * Fulcio OIDs are based on https://github.com/sigstore/fulcio/tree/main/pkg/ca/x509ca/extensions.go
 	 */
 	"1.3.6.1.4.1.57264.1.1": {
-		name: "Fulcio Issuer",
+		name: "OIDC Issuer",
 		toJSON: textDecoder,
 	},
 	"1.3.6.1.4.1.57264.1.2": {
-		name: "Fulcio GitHub Workflow Trigger",
+		name: "GitHub Workflow Trigger",
 		toJSON: textDecoder,
 	},
 	"1.3.6.1.4.1.57264.1.3": {
-		name: "Fulcio GitHub Workflow SHA",
+		name: "GitHub Workflow SHA",
 		toJSON: textDecoder,
 	},
 	"1.3.6.1.4.1.57264.1.4": {
-		name: "Fulcio GitHub Workflow Name",
+		name: "GitHub Workflow Name",
 		toJSON: textDecoder,
 	},
 	"1.3.6.1.4.1.57264.1.5": {
-		name: "Fulcio GitHub Workflow Repository",
+		name: "GitHub Workflow Repository",
 		toJSON: textDecoder,
 	},
 	"1.3.6.1.4.1.57264.1.6": {
-		name: "Fulcio GitHub Workflow Ref",
+		name: "GitHub Workflow Ref",
 		toJSON: textDecoder,
 	},
 };
