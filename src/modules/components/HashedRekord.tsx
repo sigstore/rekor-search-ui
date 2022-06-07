@@ -1,5 +1,6 @@
-import { Box, Typography } from "@mui/material";
+import { Box, Link, Typography } from "@mui/material";
 import { dump } from "js-yaml";
+import NextLink from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { HashedRekord } from "../api/generated/types/hashedrekord";
@@ -32,14 +33,21 @@ export function HashedRekordViewer({
 				variant="h5"
 				sx={{ py: 1 }}
 			>
-				Hash
+				<NextLink
+					href={`/?hash=${hashedRekord.data.hash?.algorithm}:${hashedRekord.data.hash?.value}`}
+					passHref
+				>
+					<Link>Hash</Link>
+				</NextLink>
 			</Typography>
+
 			<SyntaxHighlighter
 				language="text"
 				style={atomDark}
 			>
 				{`${hashedRekord.data.hash?.algorithm}:${hashedRekord.data.hash?.value}`}
 			</SyntaxHighlighter>
+
 			<Typography
 				variant="h5"
 				sx={{ py: 1 }}

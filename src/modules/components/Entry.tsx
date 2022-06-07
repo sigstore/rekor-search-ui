@@ -6,12 +6,14 @@ import {
 	Divider,
 	DividerProps,
 	Grid,
+	Link,
 	Paper,
 	styled,
 	Typography,
 } from "@mui/material";
 import { Box } from "@mui/system";
 import { dump, load } from "js-yaml";
+import NextLink from "next/link";
 import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
@@ -139,7 +141,13 @@ export function Entry({ entry }: { entry: LogEntry }) {
 					textOverflow: "ellipsis",
 				}}
 			>
-				Entry UUID: {uuid}
+				Entry UUID:{" "}
+				<NextLink
+					href={`/?uuid=${uuid}`}
+					passHref
+				>
+					<Link>{uuid}</Link>
+				</NextLink>
 			</Typography>
 			<Divider
 				flexItem
@@ -170,7 +178,14 @@ export function Entry({ entry }: { entry: LogEntry }) {
 				>
 					<Card
 						title="Log Index"
-						content={obj.logIndex}
+						content={
+							<NextLink
+								href={`/?logIndex=${obj.logIndex}`}
+								passHref
+							>
+								<Link>{obj.logIndex}</Link>
+							</NextLink>
+						}
 					/>
 				</Grid>
 				<Grid
