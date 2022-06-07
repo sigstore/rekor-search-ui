@@ -20,7 +20,10 @@ export function HashedRekordViewer({
 	};
 	if (certContent.includes("BEGIN CERTIFICATE")) {
 		publicKey.title = "Public Key Certificate";
-		publicKey.content = dump(decodex509(certContent));
+		publicKey.content = dump(decodex509(certContent), {
+			noArrayIndent: true,
+			lineWidth: -1,
+		});
 	}
 
 	return (
