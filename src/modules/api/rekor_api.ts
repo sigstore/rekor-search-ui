@@ -82,7 +82,7 @@ function retrieveEntriesFromIndex(
 	return retrieveIndex(query).pipe(
 		map((logIndexes: string[]) => ({
 			totalCount: logIndexes.length,
-			indexes: logIndexes.slice(0, 5),
+			indexes: logIndexes.slice(0, 20),
 		})),
 		switchMap(log => {
 			if (log.indexes.length) {
