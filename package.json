@@ -18,6 +18,7 @@
 		"@react-rxjs/core": "0.9.6",
 		"@react-rxjs/utils": "0.9.5",
 		"@types/js-yaml": "^4.0.5",
+		"fathom-client": "^3.4.1",
 		"js-yaml": "^4.1.0",
 		"moment": "^2.29.3",
 		"next": "^12.1.6",
