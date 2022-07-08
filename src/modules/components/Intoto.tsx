@@ -6,14 +6,8 @@ import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { Intoto } from "../api/generated/types/intoto";
 import { decodex509 } from "../x509/decode";
 
-export function IntotoViewer({
-	intoto,
-}: {
-	intoto: Intoto;
-}) {
-	const certContent = window.atob(
-		intoto.publicKey || ""
-	);
+export function IntotoViewer({ intoto }: { intoto: Intoto }) {
+	const certContent = window.atob(intoto.publicKey || "");
 
 	const publicKey = {
 		title: "Public Key",
