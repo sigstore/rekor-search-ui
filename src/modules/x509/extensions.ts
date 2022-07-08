@@ -16,7 +16,7 @@ interface ExtensionConfig {
 }
 
 const UTF_8_DECODER = new TextDecoder("utf-8");
-function textDecoder(rawExtension: Extension) {
+function textDecoder(rawExtension: Extension): string {
 	return UTF_8_DECODER.decode(rawExtension.value);
 }
 
@@ -94,7 +94,7 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 		},
 	},
 	/**
-	 * Fulcio OIDs are based on https://github.com/sigstore/fulcio/tree/main/pkg/ca/x509ca/extensions.go
+	 * Fulcio OIDs are based on https://github.com/sigstore/fulcio/blob/main/pkg/ca/extensions.go
 	 */
 	"1.3.6.1.4.1.57264.1.1": {
 		name: "OIDC Issuer",

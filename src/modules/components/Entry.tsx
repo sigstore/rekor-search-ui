@@ -20,8 +20,10 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { LogEntry } from "../api/generated";
 import { HashedRekord } from "../api/generated/types/hashedrekord";
+import { Intoto } from "../api/generated/types/intoto";
 import { toRelativeDateString } from "../utils/date";
 import { HashedRekordViewer } from "./HashedRekord";
+import { IntotoViewer } from "./Intoto";
 
 const DUMP_OPTIONS: jsyaml.DumpOptions = {
 	replacer: (key, value) => {
@@ -125,6 +127,9 @@ export function Entry({ entry }: { entry: LogEntry }) {
 	switch (body.kind) {
 		case "hashedrekord":
 			parsed = <HashedRekordViewer hashedRekord={body.spec as HashedRekord} />;
+			break;
+		case "intoto":
+			parsed = <IntotoViewer intoto={body.spec as Intoto} />;
 			break;
 	}
 
