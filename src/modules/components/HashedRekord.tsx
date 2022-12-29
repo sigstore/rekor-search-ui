@@ -3,13 +3,13 @@ import { dump } from "js-yaml";
 import NextLink from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { HashedRekord } from "../api/generated/types/hashedrekord";
+import { RekorSchema } from "rekor";
 import { decodex509 } from "../x509/decode";
 
 export function HashedRekordViewer({
 	hashedRekord,
 }: {
-	hashedRekord: HashedRekord;
+	hashedRekord: RekorSchema;
 }) {
 	const certContent = window.atob(
 		hashedRekord.signature.publicKey?.content || ""

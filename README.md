@@ -9,7 +9,7 @@ https://rekor.tlog.dev/
 First, run the development server:
 
 ```bash
-yarn dev
+pnpm dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -17,9 +17,3 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Deploy
 
 The app is automatically built & deployed to Vercel when pushing to the `main` branch.
-
-## Commands
-
-### `yarn generate`
-
-Automatically generates Typescript files & types from [Rekor](https://github.com/sigstore/rekor).

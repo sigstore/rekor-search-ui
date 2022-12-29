@@ -1,12 +1,12 @@
+import {
+	EntriesService,
+	Error,
+	IndexService,
+	LogEntry,
+	SearchIndex,
+} from "rekor";
 import { combineLatest, from, Observable, of } from "rxjs";
 import { map, switchMap } from "rxjs/operators";
-import {
-	IndexService,
-	SearchIndex,
-	Error,
-	EntriesService,
-	LogEntry,
-} from "./generated";
 
 export const ATTRIBUTES = [
 	"email",
@@ -44,7 +44,7 @@ function isError<T extends {}>(response: T | Error): response is Error {
 }
 
 function retrieveIndex(query: SearchIndex): Observable<string[]> {
-	return from(IndexService.searchIndex(query)).pipe(
+	return from(IndexService.searchIndex({ query })).pipe(
 		map(response => {
 			if (isError(response)) {
 				throw response;
@@ -55,7 +55,7 @@ function retrieveIndex(query: SearchIndex): Observable<string[]> {
 }
 
 function retrieveEntryByIndex(logIndex: number): Observable<LogEntry> {
-	return from(EntriesService.getLogEntryByIndex(logIndex)).pipe(
+	return from(EntriesService.getLogEntryByIndex({ logIndex })).pipe(
 		map(response => {
 			if (isError(response)) {
 				throw response;
@@ -65,8 +65,8 @@ function retrieveEntryByIndex(logIndex: number): Observable<LogEntry> {
 	);
 }
 
-function retrieveEntryByUUID(entryUUID: string): Observable<LogEntry> {
-	return from(EntriesService.getLogEntryByUuid(entryUUID)).pipe(
+function retrieveEntryByUUID(entryUuid: string): Observable<LogEntry> {
+	return from(EntriesService.getLogEntryByUuid({ entryUuid })).pipe(
 		map(response => {
 			if (isError(response)) {
 				throw response;
