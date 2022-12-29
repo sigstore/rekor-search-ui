@@ -22,6 +22,8 @@ function textDecoder(rawExtension: Extension): string {
 
 /**
  * Map from OID to Extension
+ *
+ * TODO: Migrate to x509 textual representation introduced in PeculiarVentures/x509#48.
  */
 export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 	"2.5.29.14": {

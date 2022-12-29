@@ -3,10 +3,10 @@ import { dump } from "js-yaml";
 import NextLink from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { Intoto } from "../api/generated/types/intoto";
+import { IntotoV001Schema } from "rekor";
 import { decodex509 } from "../x509/decode";
 
-export function IntotoViewer({ intoto }: { intoto: Intoto }) {
+export function IntotoViewer({ intoto }: { intoto: IntotoV001Schema }) {
 	const certContent = window.atob(intoto.publicKey || "");
 
 	const publicKey = {

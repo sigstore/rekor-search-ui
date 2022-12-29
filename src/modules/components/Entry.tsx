@@ -3,6 +3,7 @@ import {
 	Accordion,
 	AccordionDetails as MuiAccordionDetails,
 	AccordionSummary,
+	Box,
 	Divider,
 	DividerProps,
 	Grid,
@@ -11,16 +12,13 @@ import {
 	styled,
 	Typography,
 } from "@mui/material";
-import { Box } from "@mui/system";
 import { dump, load } from "js-yaml";
 import NextLink from "next/link";
 import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { LogEntry } from "../api/generated";
-import { HashedRekord } from "../api/generated/types/hashedrekord";
-import { Intoto } from "../api/generated/types/intoto";
+import { IntotoV001Schema, LogEntry, RekorSchema } from "rekor";
 import { toRelativeDateString } from "../utils/date";
 import { HashedRekordViewer } from "./HashedRekord";
 import { IntotoViewer } from "./Intoto";
@@ -126,10 +124,10 @@ export function Entry({ entry }: { entry: LogEntry }) {
 	let parsed: ReactNode | undefined;
 	switch (body.kind) {
 		case "hashedrekord":
-			parsed = <HashedRekordViewer hashedRekord={body.spec as HashedRekord} />;
+			parsed = <HashedRekordViewer hashedRekord={body.spec as RekorSchema} />;
 			break;
 		case "intoto":
-			parsed = <IntotoViewer intoto={body.spec as Intoto} />;
+			parsed = <IntotoViewer intoto={body.spec as IntotoV001Schema} />;
 			break;
 	}
 
