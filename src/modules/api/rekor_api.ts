@@ -1,12 +1,6 @@
-import {
-	EntriesService,
-	Error,
-	IndexService,
-	LogEntry,
-	SearchIndex,
-} from "rekor";
-import { combineLatest, from, Observable, of } from "rxjs";
-import { map, switchMap } from "rxjs/operators";
+import { LogEntry, RekorClient, SearchIndex } from "rekor";
+
+export const client = new RekorClient();
 
 export const ATTRIBUTES = [
 	"email",
@@ -38,66 +32,19 @@ export interface RekorEntries {
 	entries: LogEntry[];
 }
 
-function isError<T extends {}>(response: T | Error): response is Error {
-	const error = response as Error;
-	return !!error.code || !!error.message;
-}
+async function queryEntries(query: SearchIndex): Promise<RekorEntries> {
+	const logIndexes = await client.index.searchIndex({ query });
 
-function retrieveIndex(query: SearchIndex): Observable<string[]> {
-	return from(IndexService.searchIndex({ query })).pipe(
-		map(response => {
-			if (isError(response)) {
-				throw response;
-			}
-			return response;
-		})
+	const uuidToRetrieve = logIndexes.slice(0, 20);
+	const entries = await Promise.all(
+		uuidToRetrieve.map(entryUuid =>
+			client.entries.getLogEntryByUuid({ entryUuid })
+		)
 	);
-}
-
-function retrieveEntryByIndex(logIndex: number): Observable<LogEntry> {
-	return from(EntriesService.getLogEntryByIndex({ logIndex })).pipe(
-		map(response => {
-			if (isError(response)) {
-				throw response;
-			}
-			return response;
-		})
-	);
-}
-
-function retrieveEntryByUUID(entryUuid: string): Observable<LogEntry> {
-	return from(EntriesService.getLogEntryByUuid({ entryUuid })).pipe(
-		map(response => {
-			if (isError(response)) {
-				throw response;
-			}
-			return response;
-		})
-	);
-}
-
-function retrieveEntriesFromIndex(
-	query: SearchIndex
-): Observable<RekorEntries> {
-	return retrieveIndex(query).pipe(
-		map((logIndexes: string[]) => ({
-			totalCount: logIndexes.length,
-			indexes: logIndexes.slice(0, 20),
-		})),
-		switchMap(log => {
-			if (log.indexes.length) {
-				return combineLatest(
-					log.indexes.map(logIndex => retrieveEntryByUUID(logIndex))
-				).pipe(
-					map(entries => ({
-						totalCount: log.totalCount,
-						entries,
-					}))
-				);
-			}
-			return of({ totalCount: 0, entries: [] });
-		})
-	);
+	return {
+		totalCount: logIndexes.length,
+		entries,
+	};
 }
 
 async function digestMessage(message: string): Promise<string> {
@@ -108,24 +55,28 @@ async function digestMessage(message: string): Promise<string> {
 	return `sha256:${hash}`;
 }
 
-export function rekorRetrieve(search: SearchQuery): Observable<RekorEntries> {
+export async function search(search: SearchQuery): Promise<RekorEntries> {
 	switch (search.attribute) {
 		case "logIndex":
-			return retrieveEntryByIndex(search.query).pipe(
-				map(entry => ({
-					totalCount: 1,
-					entries: [entry],
-				}))
-			);
+			return {
+				totalCount: 1,
+				entries: [
+					await client.entries.getLogEntryByIndex({
+						logIndex: search.query,
+					}),
+				],
+			};
 		case "uuid":
-			return retrieveEntryByUUID(search.query).pipe(
-				map(entry => ({
-					totalCount: 1,
-					entries: [entry],
-				}))
-			);
+			return {
+				totalCount: 1,
+				entries: [
+					await client.entries.getLogEntryByUuid({
+						entryUuid: search.query,
+					}),
+				],
+			};
 		case "email":
-			return retrieveEntriesFromIndex({
+			return queryEntries({
 				email: search.query,
 			});
 		case "hash":
@@ -133,12 +84,11 @@ export function rekorRetrieve(search: SearchQuery): Observable<RekorEntries> {
 			if (!query.startsWith("sha256:")) {
 				query = `sha256:${query}`;
 			}
-			return retrieveEntriesFromIndex({
+			return queryEntries({
 				hash: query,
 			});
 		case "commitSha":
-			return from(digestMessage(search.query)).pipe(
-				switchMap(hash => retrieveEntriesFromIndex({ hash }))
-			);
+			const hash = await digestMessage(search.query);
+			return queryEntries({ hash });
 	}
 }

@@ -1,5 +1,5 @@
+import LoadingButton from "@mui/lab/LoadingButton";
 import {
-	Button,
 	FormControl,
 	Grid,
 	InputLabel,
@@ -14,6 +14,7 @@ import { Attribute, ATTRIBUTES } from "../api/rekor_api";
 
 export interface FormProps {
 	defaultValues?: FormInputs;
+	isLoading: boolean;
 	onSubmit: (query: FormInputs) => void;
 }
 
@@ -104,7 +105,7 @@ const inputConfigByAttribute: Record<FormInputs["attribute"], InputConfig> = {
 	},
 };
 
-export function SearchForm({ defaultValues, onSubmit }: FormProps) {
+export function SearchForm({ defaultValues, onSubmit, isLoading }: FormProps) {
 	const { handleSubmit, control, watch, setValue, trigger } =
 		useForm<FormInputs>({
 			mode: "all",
@@ -212,13 +213,14 @@ export function SearchForm({ defaultValues, onSubmit }: FormProps) {
 						xs={12}
 						md={2}
 					>
-						<Button
+						<LoadingButton
+							loading={isLoading}
 							type="submit"
 							variant="contained"
 							fullWidth
 						>
 							Search
-						</Button>
+						</LoadingButton>
 					</Grid>
 				</Grid>
 			</Paper>

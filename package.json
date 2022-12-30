@@ -17,10 +17,9 @@
 		"@emotion/react": "^11.8.1",
 		"@emotion/styled": "^11.8.1",
 		"@mui/icons-material": "^5.4.4",
+		"@mui/lab": "5.0.0-alpha.114",
 		"@mui/material": "^5.5.0",
 		"@peculiar/x509": "1.8.4",
-		"@react-rxjs/core": "0.9.6",
-		"@react-rxjs/utils": "0.9.5",
 		"fathom-client": "^3.4.1",
 		"js-yaml": "^4.1.0",
 		"moment": "^2.29.3",
@@ -31,10 +30,10 @@
 		"react-error-boundary": "^3.1.4",
 		"react-hook-form": "^7.31.0",
 		"react-syntax-highlighter": "^15.5.0",
-		"rekor": "^0.0.2",
-		"rxjs": "^7.5.4",
+		"rekor": "^0.0.5",
 		"sass": "^1.49.9",
-		"sharp": "^0.30.5"
+		"sharp": "^0.30.5",
+		"swr": "^2.0.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.20.7",
