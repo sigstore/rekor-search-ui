@@ -6,10 +6,6 @@ const nextConfig = {
 	sassOptions: {
 		includePaths: [path.join(__dirname, "styles")],
 	},
-	experimental: {
-		concurrentFeatures: true,
-		outputStandalone: true,
-	},
 };
 
 module.exports = nextConfig;

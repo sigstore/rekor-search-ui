@@ -1,45 +1,26 @@
-import { Alert, Box, CircularProgress, Typography } from "@mui/material";
-import { bind, Subscribe } from "@react-rxjs/core";
-import { createSignal, suspend } from "@react-rxjs/utils";
-import { useRouter } from "next/router";
-import { Suspense, useCallback, useEffect, useState } from "react";
-import { ErrorBoundary, FallbackProps } from "react-error-boundary";
 import {
-	skip,
-	startWith,
-	switchMap,
-	takeUntil,
-	throttleTime,
-} from "rxjs/operators";
+	Alert,
+	AlertTitle,
+	Box,
+	CircularProgress,
+	Typography,
+} from "@mui/material";
+import { useRouter } from "next/router";
+import { useCallback, useEffect, useState } from "react";
+import { ApiError, RekorError } from "rekor";
+import useSWR from "swr";
 import {
 	Attribute,
 	isAttribute,
-	rekorRetrieve,
+	RekorEntries,
+	search,
 	SearchQuery,
 } from "../api/rekor_api";
-import { useDestroyed$ } from "../utils/rxjs";
 import { Entry } from "./Entry";
 import { FormInputs, SearchForm } from "./SearchForm";
 
-const [queryChange$, setQuery] = createSignal<SearchQuery>();
-
-const [useRekorIndexList, rekorIndexList$] = bind(
-	queryChange$.pipe(
-		throttleTime(200),
-		switchMap(query => suspend(rekorRetrieve(query))),
-		startWith(undefined)
-	)
-);
-
-function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
-	rekorIndexList$
-		.pipe(
-			// A value will always be returned on subscribe. Wait for a new search to take
-			// place before resetting the error.
-			skip(1),
-			takeUntil(useDestroyed$())
-		)
-		.subscribe(resetErrorBoundary);
+function Error({ error }: { error: ApiError }) {
+	const { code, message } = error.body as RekorError;
 
 	return (
 		<Alert
@@ -47,14 +28,15 @@ function ErrorFallback({ error, resetErrorBoundary }: FallbackProps) {
 			severity="error"
 			variant="filled"
 		>
-			{error?.message}
+			<AlertTitle>
+				{code && <>Code {code}: </>} {message}
+			</AlertTitle>
+			{error.url} {error.status}
 		</Alert>
 	);
 }
 
-function RekorList() {
-	const rekorEntries = useRekorIndexList();
-
+function RekorList({ rekorEntries }: { rekorEntries?: RekorEntries }) {
 	if (!rekorEntries) {
 		return <></>;
 	}
@@ -105,6 +87,16 @@ function LoadingIndicator() {
 export function Explorer() {
 	const router = useRouter();
 	const [formInputs, setFormInputs] = useState<FormInputs>();
+	const [query, setQuery] = useState<SearchQuery>();
+	const { data, error, isValidating, mutate } = useSWR<RekorEntries, ApiError>(
+		query,
+		search,
+		{
+			revalidateOnFocus: false,
+			shouldRetryOnError: false,
+			refreshWhenHidden: false,
+		}
+	);
 
 	const setQueryParams = useCallback(
 		(formInputs: FormInputs) => {
@@ -132,7 +124,8 @@ export function Explorer() {
 			return;
 		}
 		setFormInputs({ attribute, value });
-	}, [router.query]);
+		mutate();
+	}, [router.query, mutate]);
 
 	useEffect(() => {
 		if (formInputs) {
@@ -160,16 +153,13 @@ export function Explorer() {
 		<div>
 			<SearchForm
 				defaultValues={formInputs}
+				isLoading={isValidating}
 				onSubmit={setQueryParams}
 			/>
 
-			<ErrorBoundary FallbackComponent={ErrorFallback}>
-				<Suspense fallback={<LoadingIndicator />}>
-					<Subscribe source$={rekorIndexList$}>
-						<RekorList></RekorList>
-					</Subscribe>
-				</Suspense>
-			</ErrorBoundary>
+			{error && <Error error={error} />}
+
+			{isValidating ? <LoadingIndicator /> : <RekorList rekorEntries={data} />}
 		</div>
 	);
 }
