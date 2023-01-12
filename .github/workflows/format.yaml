@@ -19,4 +19,3 @@ jobs:
         with:
           dry: true
           prettier_options: --check .
-          only_changed: True
