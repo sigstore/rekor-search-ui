@@ -1,9 +1,7 @@
-import "../../styles/globals.css";
-
-import type { AppProps } from "next/app";
-import { useEffect } from "react";
-import { Router } from "next/router";
 import * as Fathom from "fathom-client";
+import type { AppProps } from "next/app";
+import { Router } from "next/router";
+import { useEffect } from "react";
 
 // Record a pageview when route changes.
 Router.events.on("routeChangeComplete", (as, routeProps) => {
