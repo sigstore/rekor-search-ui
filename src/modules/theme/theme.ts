@@ -2,11 +2,11 @@ import { createTheme } from "@mui/material/styles";
 
 export const REKOR_SEARCH_THEME = createTheme({
 	typography: {
-		fontFamily: ["Inter", "sans-serif"].join(","),
+		fontFamily: ["Helvetica Neue", "Arial", "sans-serif"].join(","),
 		h4: {
 			fontWeight: 300,
-			fontSize: "1.5rem",
-			color: "#444444",
+			fontSize: "1.8rem",
+			color: "#2e2f71",
 		},
 		h5: {
 			fontWeight: 300,
@@ -16,20 +16,34 @@ export const REKOR_SEARCH_THEME = createTheme({
 	},
 	palette: {
 		background: {
-			default: "rgba(255, 234, 215, 1)",
+			default: "#F8F7FD",
 		},
 		primary: {
-			main: "#444444",
+			main: "#444CE4",
 		},
 		secondary: {
-			main: "#ffc398",
+			main: "#B938B4",
 		},
 		info: {
-			main: "#444444",
+			main: "#2e2f71",
 		},
 		error: {
-			light: "#cb4445",
-			main: "#ff5555",
+			main: "#B81E22",
+		},
+	},
+	components: {
+		MuiCssBaseline: {
+			styleOverrides: `
+				pre {
+					font-size: 0.8rem;
+					margin: 0 !important;
+				}
+		`,
+		},
+		MuiPaper: {
+			defaultProps: {
+				variant: "outlined",
+			},
 		},
 	},
 });

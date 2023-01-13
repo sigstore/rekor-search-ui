@@ -11,7 +11,7 @@ export const ATTRIBUTES = [
 ] as const;
 const ATTRIBUTES_SET = new Set<string>(ATTRIBUTES);
 
-export type Attribute = typeof ATTRIBUTES[number];
+export type Attribute = (typeof ATTRIBUTES)[number];
 
 export function isAttribute(input: string): input is Attribute {
 	return ATTRIBUTES_SET.has(input);

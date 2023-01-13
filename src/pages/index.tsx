@@ -1,9 +1,8 @@
 import {
 	Box,
-	Card,
-	CardActionArea,
 	Container,
 	CssBaseline,
+	Link,
 	ThemeProvider,
 	Typography,
 } from "@mui/material";
@@ -30,53 +29,60 @@ const Home: NextPage = () => {
 
 			<ThemeProvider theme={REKOR_SEARCH_THEME}>
 				<CssBaseline />
+
+				<Box
+					sx={{
+						display: "flex",
+						justifyContent: "space-between",
+						alignItems: "center",
+						paddingX: 4,
+						paddingY: 2,
+						background: "white",
+						borderBottom: "1px solid #E3E0E6",
+					}}
+				>
+					<Box sx={{ height: 41, width: 198, position: "relative" }}>
+						<Link
+							href="https://chainguard.dev"
+							target="_blank"
+							rel="noopener noreferrer"
+						>
+							<Image
+								src="/chainguard-logo.svg"
+								alt="Chainguard Logo"
+								fill
+							/>
+						</Link>
+					</Box>
+
+					<Typography variant="h4">Rekor Search</Typography>
+
+					<Box sx={{ width: 198, textAlign: "right" }}>
+						<Link
+							href="https://github.com/chainguard-dev/rekor-search-ui"
+							target="_blank"
+							rel="noopener noreferrer"
+							sx={{ lineHeight: 0 }}
+						>
+							<Image
+								src="/github.svg"
+								alt="GitHub"
+								color="white"
+								width={24}
+								height={24}
+							/>
+						</Link>
+					</Box>
+				</Box>
+
 				<Container
 					sx={{
-						mt: 3,
+						mt: 4,
 						display: "flex",
 						flexDirection: "column",
 						gap: 3,
 					}}
 				>
-					<Box
-						sx={{
-							display: "flex",
-							justifyContent: "space-between",
-						}}
-					>
-						<Typography
-							sx={{
-								display: "flex",
-								flexDirection: "row",
-								alignItems: "center",
-								gap: 2,
-							}}
-							variant="h4"
-							component="h1"
-						>
-							<Image
-								src="/rekor-logo.svg"
-								alt="Rekor"
-								width={124}
-								height={40}
-							/>
-							search
-						</Typography>
-
-						<a
-							href="https://github.com/chainguard-dev/rekor-search-ui"
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							<Image
-								src="/github.svg"
-								alt="GitHub"
-								width={40}
-								height={40}
-							/>
-						</a>
-					</Box>
-
 					<Explorer />
 
 					<Box
@@ -85,34 +91,20 @@ const Home: NextPage = () => {
 							display: "flex",
 							flexDirection: "column",
 							alignItems: "center",
-							borderTop: 2,
-							borderColor: "secondary.main",
 							mb: 3,
 							pt: 2,
 						}}
 					>
-						<Typography
-							variant="overline"
-							sx={{ color: "secondary.dark" }}
-						>
-							Brought to you by
+						<Typography fontSize="small">
+							Built with ❤️ by{" "}
+							<Link
+								href="https://chainguard.dev"
+								target="_blank"
+								rel="noopener noreferrer"
+							>
+								Chainguard
+							</Link>
 						</Typography>
-						<Card>
-							<CardActionArea sx={{ p: 1 }}>
-								<a
-									href="https://chainguard.dev"
-									target="_blank"
-									rel="noopener noreferrer"
-								>
-									<Image
-										src="/chainguard-logo.svg"
-										alt="Chainguard Logo"
-										width={123}
-										height={42}
-									/>
-								</a>
-							</CardActionArea>
-						</Card>
 					</Box>
 				</Container>
 			</ThemeProvider>

@@ -132,10 +132,7 @@ export function Entry({ entry }: { entry: LogEntry }) {
 	}
 
 	return (
-		<Paper
-			sx={{ mb: 2, p: 1 }}
-			elevation={4}
-		>
+		<Paper sx={{ mb: 2, p: 1 }}>
 			<Typography
 				variant="h5"
 				component="h2"
@@ -213,7 +210,14 @@ export function Entry({ entry }: { entry: LogEntry }) {
 				sx={{ my: 1 }}
 			/>
 			{parsed}
-			<Box sx={{ mt: 1 }}>
+			<Box
+				sx={{
+					mt: 1,
+					"& .MuiAccordion-root:not(:last-of-type)": {
+						borderBottom: "none",
+					},
+				}}
+			>
 				<>
 					<Accordion
 						disableGutters
