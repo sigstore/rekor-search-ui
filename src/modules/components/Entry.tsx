@@ -142,12 +142,13 @@ export function Entry({ entry }: { entry: LogEntry }) {
 				}}
 			>
 				Entry UUID:{" "}
-				<NextLink
+				<Link
+					component={NextLink}
 					href={`/?uuid=${uuid}`}
 					passHref
 				>
-					<Link>{uuid}</Link>
-				</NextLink>
+					{uuid}
+				</Link>
 			</Typography>
 			<Divider
 				flexItem
@@ -179,12 +180,13 @@ export function Entry({ entry }: { entry: LogEntry }) {
 					<Card
 						title="Log Index"
 						content={
-							<NextLink
+							<Link
+								component={NextLink}
 								href={`/?logIndex=${obj.logIndex}`}
 								passHref
 							>
-								<Link>{obj.logIndex}</Link>
-							</NextLink>
+								{obj.logIndex}
+							</Link>
 						}
 					/>
 				</Grid>

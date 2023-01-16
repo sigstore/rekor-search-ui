@@ -1,6 +1,6 @@
+import { useCallback } from "react";
 import { LogEntry, RekorClient, SearchIndex } from "rekor";
-
-export const client = new RekorClient();
+import { useRekorClient } from "./context";
 
 export const ATTRIBUTES = [
 	"email",
@@ -32,7 +32,55 @@ export interface RekorEntries {
 	entries: LogEntry[];
 }
 
-async function queryEntries(query: SearchIndex): Promise<RekorEntries> {
+export function useRekorSearch() {
+	const client = useRekorClient();
+
+	return useCallback(
+		async (search: SearchQuery): Promise<RekorEntries> => {
+			switch (search.attribute) {
+				case "logIndex":
+					return {
+						totalCount: 1,
+						entries: [
+							await client.entries.getLogEntryByIndex({
+								logIndex: search.query,
+							}),
+						],
+					};
+				case "uuid":
+					return {
+						totalCount: 1,
+						entries: [
+							await client.entries.getLogEntryByUuid({
+								entryUuid: search.query,
+							}),
+						],
+					};
+				case "email":
+					return queryEntries(client, {
+						email: search.query,
+					});
+				case "hash":
+					let query = search.query;
+					if (!query.startsWith("sha256:")) {
+						query = `sha256:${query}`;
+					}
+					return queryEntries(client, {
+						hash: query,
+					});
+				case "commitSha":
+					const hash = await digestMessage(search.query);
+					return queryEntries(client, { hash });
+			}
+		},
+		[client]
+	);
+}
+
+async function queryEntries(
+	client: RekorClient,
+	query: SearchIndex
+): Promise<RekorEntries> {
 	const logIndexes = await client.index.searchIndex({ query });
 
 	const uuidToRetrieve = logIndexes.slice(0, 20);
@@ -53,42 +101,4 @@ async function digestMessage(message: string): Promise<string> {
 	const hashArray = Array.from(new Uint8Array(hashBuffer));
 	const hash = hashArray.map(b => b.toString(16).padStart(2, "0")).join("");
 	return `sha256:${hash}`;
-}
-
-export async function search(search: SearchQuery): Promise<RekorEntries> {
-	switch (search.attribute) {
-		case "logIndex":
-			return {
-				totalCount: 1,
-				entries: [
-					await client.entries.getLogEntryByIndex({
-						logIndex: search.query,
-					}),
-				],
-			};
-		case "uuid":
-			return {
-				totalCount: 1,
-				entries: [
-					await client.entries.getLogEntryByUuid({
-						entryUuid: search.query,
-					}),
-				],
-			};
-		case "email":
-			return queryEntries({
-				email: search.query,
-			});
-		case "hash":
-			let query = search.query;
-			if (!query.startsWith("sha256:")) {
-				query = `sha256:${query}`;
-			}
-			return queryEntries({
-				hash: query,
-			});
-		case "commitSha":
-			const hash = await digestMessage(search.query);
-			return queryEntries({ hash });
-	}
 }

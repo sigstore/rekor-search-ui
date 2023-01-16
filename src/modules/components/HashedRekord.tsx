@@ -33,12 +33,13 @@ export function HashedRekordViewer({
 				variant="h5"
 				sx={{ py: 1 }}
 			>
-				<NextLink
+				<Link
+					component={NextLink}
 					href={`/?hash=${hashedRekord.data.hash?.algorithm}:${hashedRekord.data.hash?.value}`}
 					passHref
 				>
-					<Link>Hash</Link>
-				</NextLink>
+					Hash
+				</Link>
 			</Typography>
 
 			<SyntaxHighlighter
