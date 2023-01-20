@@ -1,7 +1,9 @@
+import SettingsIcon from "@mui/icons-material/Settings";
 import {
 	Box,
 	Container,
 	CssBaseline,
+	IconButton,
 	Link,
 	ThemeProvider,
 	Typography,
@@ -9,10 +11,15 @@ import {
 import type { NextPage } from "next";
 import Head from "next/head";
 import Image from "next/image";
+import { useState } from "react";
+import { RekorClientProvider } from "../modules/api/context";
 import { Explorer } from "../modules/components/Explorer";
+import { Settings } from "../modules/components/Settings";
 import { REKOR_SEARCH_THEME } from "../modules/theme/theme";
 
 const Home: NextPage = () => {
+	const [settingsOpen, setSettingsOpen] = useState(false);
+
 	return (
 		<>
 			<Head>
@@ -57,7 +64,23 @@ const Home: NextPage = () => {
 
 					<Typography variant="h4">Rekor Search</Typography>
 
-					<Box sx={{ width: 198, textAlign: "right" }}>
+					<Box
+						sx={{
+							width: 198,
+							display: "flex",
+							justifyContent: "flex-end",
+							alignItems: "center",
+						}}
+					>
+						<IconButton
+							sx={{ mr: 2 }}
+							aria-label="settings"
+							color="inherit"
+							size="small"
+							onClick={() => setSettingsOpen(true)}
+						>
+							<SettingsIcon />
+						</IconButton>
 						<Link
 							href="https://github.com/chainguard-dev/rekor-search-ui"
 							target="_blank"
@@ -74,6 +97,11 @@ const Home: NextPage = () => {
 						</Link>
 					</Box>
 				</Box>
+
+				<Settings
+					open={settingsOpen}
+					onClose={() => setSettingsOpen(false)}
+				/>
 
 				<Container
 					sx={{
@@ -112,4 +140,9 @@ const Home: NextPage = () => {
 	);
 };
 
-export default Home;
+const Page: NextPage = () => (
+	<RekorClientProvider>
+		<Home />
+	</RekorClientProvider>
+);
+export default Page;
