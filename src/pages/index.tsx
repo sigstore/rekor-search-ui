@@ -50,13 +50,13 @@ const Home: NextPage = () => {
 				>
 					<Box sx={{ height: 41, width: 198, position: "relative" }}>
 						<Link
-							href="https://chainguard.dev"
+							href="https://sigstore.dev"
 							target="_blank"
 							rel="noopener noreferrer"
 						>
 							<Image
-								src="/chainguard-logo.svg"
-								alt="Chainguard Logo"
+								src="/sigstore_rekor-horizontal-color.svg"
+								alt="Rekor Logo"
 								fill
 							/>
 						</Link>
@@ -82,7 +82,7 @@ const Home: NextPage = () => {
 							<SettingsIcon />
 						</IconButton>
 						<Link
-							href="https://github.com/chainguard-dev/rekor-search-ui"
+							href="https://github.com/feelepxyz/rekor-search-ui"
 							target="_blank"
 							rel="noopener noreferrer"
 							sx={{ lineHeight: 0 }}
