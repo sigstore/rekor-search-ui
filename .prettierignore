@@ -4,4 +4,3 @@ node_modules*
 .next*
 **/generated/**
 LICENSE
-pnpm-lock.yaml
