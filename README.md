@@ -1,6 +1,6 @@
 This repo contains a simple UI for searching Search the Rekor public transparency log.
 
-https://rekor.tlog.dev/
+https://search.sigstore.dev/
 
 ![Rekor UI Screenshot](assets/screenshot.png)
 
