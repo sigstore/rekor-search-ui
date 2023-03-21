@@ -55,7 +55,7 @@ const Home: NextPage = () => {
 							rel="noopener noreferrer"
 						>
 							<Image
-								src="/sigstore_rekor-horizontal-color.svg"
+								src="/rekor-search-ui/sigstore_rekor-horizontal-color.svg"
 								alt="Rekor Logo"
 								fill
 							/>
@@ -88,7 +88,7 @@ const Home: NextPage = () => {
 							sx={{ lineHeight: 0 }}
 						>
 							<Image
-								src="/github.svg"
+								src="/rekor-search-ui/github.svg"
 								alt="GitHub"
 								color="white"
 								width={24}
