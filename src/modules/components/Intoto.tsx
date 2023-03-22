@@ -3,11 +3,12 @@ import { dump } from "js-yaml";
 import NextLink from "next/link";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { IntotoV001Schema } from "rekor";
+import { IntotoV002Schema } from "rekor";
 import { decodex509 } from "../x509/decode";
 
-export function IntotoViewer({ intoto }: { intoto: IntotoV001Schema }) {
-	const certContent = window.atob(intoto.publicKey || "");
+export function IntotoViewer({ intoto }: { intoto: IntotoV002Schema }) {
+	const signature = intoto.content.envelope?.signatures[0];
+	const certContent = window.atob(signature?.publicKey || "");
 
 	const publicKey = {
 		title: "Public Key",
@@ -52,7 +53,7 @@ export function IntotoViewer({ intoto }: { intoto: IntotoV001Schema }) {
 				language="text"
 				style={atomDark}
 			>
-				{intoto.publicKey || ""}
+				{window.atob(signature?.sig || "")}
 			</SyntaxHighlighter>
 			<Typography
 				variant="h5"
