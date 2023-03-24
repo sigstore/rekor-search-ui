@@ -16,4 +16,4 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Deploy
 
-The app is automatically built & deployed to Vercel when pushing to the `main` branch.
+The app is based on [Next.JS](https://nextjs.org/) and is automatically built & deployed to GitHub Pages when pushing to the `main` branch.
