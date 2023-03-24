@@ -10,7 +10,7 @@ import {
 	Link,
 	Paper,
 	styled,
-	Typography,
+	Typography
 } from "@mui/material";
 import { dump, load } from "js-yaml";
 import NextLink from "next/link";
@@ -18,7 +18,7 @@ import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { IntotoV001Schema, LogEntry, RekorSchema } from "rekor";
+import { IntotoV002Schema, LogEntry, RekorSchema } from "rekor";
 import { toRelativeDateString } from "../utils/date";
 import { HashedRekordViewer } from "./HashedRekord";
 import { IntotoViewer } from "./Intoto";
@@ -127,7 +127,7 @@ export function Entry({ entry }: { entry: LogEntry }) {
 			parsed = <HashedRekordViewer hashedRekord={body.spec as RekorSchema} />;
 			break;
 		case "intoto":
-			parsed = <IntotoViewer intoto={body.spec as IntotoV001Schema} />;
+			parsed = <IntotoViewer intoto={body.spec as IntotoV002Schema} />;
 			break;
 	}
 
