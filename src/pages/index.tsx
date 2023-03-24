@@ -122,8 +122,7 @@ const Home: NextPage = () => {
 							mb: 3,
 							pt: 2,
 						}}
-					>
-					</Box>
+					></Box>
 				</Container>
 			</ThemeProvider>
 		</>

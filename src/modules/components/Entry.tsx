@@ -10,7 +10,7 @@ import {
 	Link,
 	Paper,
 	styled,
-	Typography
+	Typography,
 } from "@mui/material";
 import { dump, load } from "js-yaml";
 import NextLink from "next/link";
