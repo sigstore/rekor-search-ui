@@ -55,7 +55,7 @@ const Home: NextPage = () => {
 							rel="noopener noreferrer"
 						>
 							<Image
-								src="/rekor-search-ui/sigstore_rekor-horizontal-color.svg"
+								src="/sigstore_rekor-horizontal-color.svg"
 								alt="Rekor Logo"
 								fill
 							/>
@@ -82,13 +82,13 @@ const Home: NextPage = () => {
 							<SettingsIcon />
 						</IconButton>
 						<Link
-							href="https://github.com/feelepxyz/rekor-search-ui"
+							href="https://github.com/sigstore/rekor-search-ui"
 							target="_blank"
 							rel="noopener noreferrer"
 							sx={{ lineHeight: 0 }}
 						>
 							<Image
-								src="/rekor-search-ui/github.svg"
+								src="/github.svg"
 								alt="GitHub"
 								color="white"
 								width={24}
@@ -123,16 +123,6 @@ const Home: NextPage = () => {
 							pt: 2,
 						}}
 					>
-						<Typography fontSize="small">
-							Built with ❤️ by{" "}
-							<Link
-								href="https://chainguard.dev"
-								target="_blank"
-								rel="noopener noreferrer"
-							>
-								Chainguard
-							</Link>
-						</Typography>
 					</Box>
 				</Container>
 			</ThemeProvider>
