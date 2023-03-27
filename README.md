@@ -2,7 +2,7 @@ This repo contains a simple UI for searching Search the Rekor public transparenc
 
 https://search.sigstore.dev/
 
-![Rekor UI Screenshot](assets/screenshot2.png)
+![Rekor UI Screenshot](assets/screenshot.png)
 
 ## Getting Started
 
