@@ -1,3 +1,4 @@
+import { AsnAnyConverter, AsnUtf8StringConverter } from "@peculiar/asn1-schema";
 import {
 	AuthorityKeyIdentifierExtension,
 	BasicConstraintsExtension,
@@ -18,6 +19,12 @@ interface ExtensionConfig {
 const UTF_8_DECODER = new TextDecoder("utf-8");
 function textDecoder(rawExtension: Extension): string {
 	return UTF_8_DECODER.decode(rawExtension.value);
+}
+
+function utf8StringDecoder(rawExtension: Extension): string {
+	return AsnUtf8StringConverter.fromASN(
+		AsnAnyConverter.toASN(rawExtension.value)
+	);
 }
 
 /**
@@ -121,5 +128,61 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 	"1.3.6.1.4.1.57264.1.6": {
 		name: "GitHub Workflow Ref",
 		toJSON: textDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.8": {
+		name: "OIDC Issuer (v2)",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.9": {
+		name: "Build Signer URI",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.10": {
+		name: "Build Signer Digest",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.11": {
+		name: "Runner Environment",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.12": {
+		name: "Source Repository URI",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.13": {
+		name: "Source Repository Digest",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.14": {
+		name: "Source Repository Ref",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.15": {
+		name: "Source Repository Identifier",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.16": {
+		name: "Source Repository Owner URI",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.17": {
+		name: "Source Repository Owner Identifier",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.18": {
+		name: "Build Config URI",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.19": {
+		name: "Build Config Digest",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.20": {
+		name: "Build Trigger",
+		toJSON: utf8StringDecoder,
+	},
+	"1.3.6.1.4.1.57264.1.21": {
+		name: "Run Invocation URI",
+		toJSON: utf8StringDecoder,
 	},
 };
