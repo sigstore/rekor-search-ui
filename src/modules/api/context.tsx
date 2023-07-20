@@ -15,7 +15,7 @@ export interface RekorClientContext {
 }
 
 export const RekorClientContext = createContext<RekorClientContext | undefined>(
-	undefined
+	undefined,
 );
 
 export const RekorClientProvider: FunctionComponent<PropsWithChildren<{}>> = ({
@@ -50,7 +50,7 @@ export function useRekorClient(): RekorClient {
 
 export function useRekorBaseUrl(): [
 	RekorClientContext["baseUrl"],
-	RekorClientContext["setBaseUrl"]
+	RekorClientContext["setBaseUrl"],
 ] {
 	const ctx = useContext(RekorClientContext);
 
