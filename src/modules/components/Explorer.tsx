@@ -139,15 +139,15 @@ export function Explorer() {
 					},
 				},
 				`/?${formInputs.attribute}=${formInputs.value}`,
-				{ shallow: true }
+				{ shallow: true },
 			);
 		},
-		[router]
+		[router],
 	);
 
 	useEffect(() => {
 		const attribute = Object.keys(router.query).find(key =>
-			isAttribute(key)
+			isAttribute(key),
 		) as Attribute | undefined;
 		const value = attribute && router.query[attribute];
 

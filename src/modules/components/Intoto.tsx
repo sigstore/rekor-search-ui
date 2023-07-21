@@ -29,7 +29,7 @@ export function IntotoViewer({ intoto }: { intoto: IntotoV002Schema }) {
 				sx={{ py: 1 }}
 			>
 				<NextLink
-					href={`/?hash=${intoto.content.hash?.algorithm}:${intoto.content.hash?.value}`}
+					href={`/?hash=${intoto.content.payloadHash?.algorithm}:${intoto.content.payloadHash?.value}`}
 					passHref
 				>
 					<Link>Hash</Link>
@@ -40,7 +40,7 @@ export function IntotoViewer({ intoto }: { intoto: IntotoV002Schema }) {
 				language="text"
 				style={atomDark}
 			>
-				{`${intoto.content.hash?.algorithm}:${intoto.content.hash?.value}`}
+				{`${intoto.content.payloadHash?.algorithm}:${intoto.content.payloadHash?.value}`}
 			</SyntaxHighlighter>
 
 			<Typography

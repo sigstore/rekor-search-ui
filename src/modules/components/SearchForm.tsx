@@ -140,7 +140,7 @@ export function SearchForm({ defaultValues, onSubmit, isLoading }: FormProps) {
 			pattern: undefined,
 			min: undefined,
 		},
-		inputConfigByAttribute[watchAttribute].rules
+		inputConfigByAttribute[watchAttribute].rules,
 	);
 
 	return (

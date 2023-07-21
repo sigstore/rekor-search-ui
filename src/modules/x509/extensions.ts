@@ -23,7 +23,7 @@ function textDecoder(rawExtension: Extension): string {
 
 function utf8StringDecoder(rawExtension: Extension): string {
 	return AsnUtf8StringConverter.fromASN(
-		AsnAnyConverter.toASN(rawExtension.value)
+		AsnAnyConverter.toASN(rawExtension.value),
 	);
 }
 

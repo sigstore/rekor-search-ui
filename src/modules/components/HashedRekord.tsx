@@ -12,7 +12,7 @@ export function HashedRekordViewer({
 	hashedRekord: RekorSchema;
 }) {
 	const certContent = window.atob(
-		hashedRekord.signature.publicKey?.content || ""
+		hashedRekord.signature.publicKey?.content || "",
 	);
 
 	const publicKey = {

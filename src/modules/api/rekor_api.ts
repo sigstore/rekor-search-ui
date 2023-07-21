@@ -73,21 +73,21 @@ export function useRekorSearch() {
 					return queryEntries(client, { hash });
 			}
 		},
-		[client]
+		[client],
 	);
 }
 
 async function queryEntries(
 	client: RekorClient,
-	query: SearchIndex
+	query: SearchIndex,
 ): Promise<RekorEntries> {
 	const logIndexes = await client.index.searchIndex({ query });
 
 	const uuidToRetrieve = logIndexes.slice(0, 20);
 	const entries = await Promise.all(
 		uuidToRetrieve.map(entryUuid =>
-			client.entries.getLogEntryByUuid({ entryUuid })
-		)
+			client.entries.getLogEntryByUuid({ entryUuid }),
+		),
 	);
 	return {
 		totalCount: logIndexes.length,
