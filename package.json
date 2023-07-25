@@ -27,7 +27,7 @@
 		"react-error-boundary": "^3.1.4",
 		"react-hook-form": "^7.31.0",
 		"react-syntax-highlighter": "^15.5.0",
-		"rekor": "^0.0.7",
+		"rekor": "^0.2.0",
 		"sass": "^1.49.9",
 		"sharp": "^0.30.5"
 	},
