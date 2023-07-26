@@ -18,8 +18,9 @@ import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { IntotoV002Schema, LogEntry, RekorSchema } from "rekor";
+import { DSSEV001Schema, IntotoV002Schema, LogEntry, RekorSchema } from "rekor";
 import { toRelativeDateString } from "../utils/date";
+import { DSSEViewer } from "./DSSE";
 import { HashedRekordViewer } from "./HashedRekord";
 import { IntotoViewer } from "./Intoto";
 
@@ -128,6 +129,9 @@ export function Entry({ entry }: { entry: LogEntry }) {
 			break;
 		case "intoto":
 			parsed = <IntotoViewer intoto={body.spec as IntotoV002Schema} />;
+			break;
+		case "dsse":
+			parsed = <DSSEViewer dsse={body.spec as DSSEV001Schema} />;
 			break;
 	}
 
