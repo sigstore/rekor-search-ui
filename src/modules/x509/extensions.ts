@@ -188,5 +188,5 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 	"1.3.6.1.4.1.57264.1.22": {
 		name: "Source Repository Visibility At Signing",
 		toJSON: utf8StringDecoder,
-	}
+	},
 };
