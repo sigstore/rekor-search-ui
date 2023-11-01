@@ -30,6 +30,10 @@ export function Settings({
 	}, []);
 
 	const onSave = useCallback(() => {
+		if (localBaseUrl === undefined && process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN){
+			setLocalBaseUrl(process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN);
+		}
+
 		setBaseUrl(localBaseUrl);
 		onClose();
 	}, [localBaseUrl, setBaseUrl, onClose]);
@@ -49,7 +53,7 @@ export function Settings({
 					<Typography variant="overline">Override rekor endpoint</Typography>
 					<TextField
 						value={localBaseUrl ?? ""}
-						placeholder="https://rekor.sigstore.dev"
+						placeholder= {(baseUrl === undefined) ? "https://rekor.sigstore.dev" : baseUrl}
 						onChange={handleChangeBaseUrl}
 						fullWidth
 					/>

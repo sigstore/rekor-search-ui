@@ -24,6 +24,10 @@ export const RekorClientProvider: FunctionComponent<PropsWithChildren<{}>> = ({
 	const [baseUrl, setBaseUrl] = useState<string>();
 
 	const context: RekorClientContext = useMemo(() => {
+		if (baseUrl === undefined && process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN) {
+			setBaseUrl(process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN)
+		}
+
 		return {
 			client: new RekorClient({ BASE: baseUrl }),
 			baseUrl,
