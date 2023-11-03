@@ -25,13 +25,13 @@ export const RekorClientProvider: FunctionComponent<PropsWithChildren<{}>> = ({
 
 	const context: RekorClientContext = useMemo(() => {
 		/*
-		Using the Next.js framework, the NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN env variable requires 
+		Using the Next.js framework, the NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN env variable requires
 		a NEXT_PUBLIC_* prefix to make the value of the variable accessible to the browser.
 		Variables missing this prefix are only accessible in the Node.js environment.
 		https://nextjs.org/docs/pages/building-your-application/configuring/environment-variables
 		*/
 		if (baseUrl === undefined && process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN) {
-			setBaseUrl(process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN)
+			setBaseUrl(process.env.NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN);
 		}
 
 		return {

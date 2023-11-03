@@ -22,6 +22,7 @@ The app is based on [Next.JS](https://nextjs.org/) and is automatically built & 
 
 This app supports overriding of the default rekor server instance for those running private instances of the the sigstore stack.
 Create a `.env.local` file at the root and include in it this environment variable
+
 ```properties
 NEXT_PUBLIC_REKOR_DEFAULT_DOMAIN=https://privaterekor.sigstore.dev
 ```
