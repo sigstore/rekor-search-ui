@@ -18,7 +18,13 @@ import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { DSSEV001Schema, IntotoV001Schema, IntotoV002Schema, LogEntry, RekorSchema } from "rekor";
+import {
+	DSSEV001Schema,
+	IntotoV001Schema,
+	IntotoV002Schema,
+	LogEntry,
+	RekorSchema,
+} from "rekor";
 import { toRelativeDateString } from "../utils/date";
 import { DSSEViewer } from "./DSSE";
 import { HashedRekordViewer } from "./HashedRekord";
