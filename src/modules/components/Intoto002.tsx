@@ -6,7 +6,7 @@ import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import { IntotoV002Schema } from "rekor";
 import { decodex509 } from "../x509/decode";
 
-export function IntotoViewer({ intoto }: { intoto: IntotoV002Schema }) {
+export function IntotoViewer002({ intoto }: { intoto: IntotoV002Schema }) {
 	const signature = intoto.content.envelope?.signatures[0];
 	const certContent = window.atob(signature?.publicKey || "");
 
