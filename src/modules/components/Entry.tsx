@@ -18,11 +18,18 @@ import { Convert } from "pvtsutils";
 import { ReactNode } from "react";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { atomDark } from "react-syntax-highlighter/dist/cjs/styles/prism";
-import { DSSEV001Schema, IntotoV002Schema, LogEntry, RekorSchema } from "rekor";
+import {
+	DSSEV001Schema,
+	IntotoV001Schema,
+	IntotoV002Schema,
+	LogEntry,
+	RekorSchema,
+} from "rekor";
 import { toRelativeDateString } from "../utils/date";
 import { DSSEViewer } from "./DSSE";
 import { HashedRekordViewer } from "./HashedRekord";
-import { IntotoViewer } from "./Intoto";
+import { IntotoViewer001 } from "./Intoto001";
+import { IntotoViewer002 } from "./Intoto002";
 
 const DUMP_OPTIONS: jsyaml.DumpOptions = {
 	replacer: (key, value) => {
@@ -128,8 +135,13 @@ export function Entry({ entry }: { entry: LogEntry }) {
 			parsed = <HashedRekordViewer hashedRekord={body.spec as RekorSchema} />;
 			break;
 		case "intoto":
-			parsed = <IntotoViewer intoto={body.spec as IntotoV002Schema} />;
-			break;
+			if (body.apiVersion == "0.0.1") {
+				parsed = <IntotoViewer001 intoto={body.spec as IntotoV001Schema} />;
+				break;
+			} else {
+				parsed = <IntotoViewer002 intoto={body.spec as IntotoV002Schema} />;
+				break;
+			}
 		case "dsse":
 			parsed = <DSSEViewer dsse={body.spec as DSSEV001Schema} />;
 			break;
