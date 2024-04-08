@@ -32,7 +32,7 @@ export function IntotoViewer002({ intoto }: { intoto: IntotoV002Schema }) {
 					href={`/?hash=${intoto.content.payloadHash?.algorithm}:${intoto.content.payloadHash?.value}`}
 					passHref
 				>
-					<Link>Hash</Link>
+					<Link component={"span"}>Hash</Link>
 				</NextLink>
 			</Typography>
 

@@ -1,0 +1,19 @@
+name: 🧪 Unit Tests (Jest)
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  build:
+    name: 🧪 Unit Tests (Jest)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: 📦 Install modules
+        run: npm install
+      - name: ⚙️ Run tests
+        run: npm run test --coverage
