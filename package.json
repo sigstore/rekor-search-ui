@@ -32,7 +32,7 @@
 		"react-syntax-highlighter": "^15.5.0",
 		"rekor": "^0.2.0",
 		"sass": "^1.49.9",
-		"sharp": "^0.30.5"
+		"sharp": "^0.32.6"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.20.7",
