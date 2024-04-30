@@ -32,7 +32,7 @@ export function DSSEViewer({ dsse }: { dsse: DSSEV001Schema }) {
 					href={`/?hash=${dsse.payloadHash?.algorithm}:${dsse.payloadHash?.value}`}
 					passHref
 				>
-					<Link>Hash</Link>
+					<Link component={"span"}>Hash</Link>
 				</NextLink>
 			</Typography>
 
