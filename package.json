@@ -18,7 +18,7 @@
 		"@emotion/react": "^11.14.0",
 		"@emotion/styled": "^11.14.0",
 		"@mui/icons-material": "^5.4.4",
-		"@mui/lab": "5.0.0-alpha.114",
+		"@mui/lab": "5.0.0-alpha.175",
 		"@mui/material": "^5.5.0",
 		"@peculiar/x509": "1.8.4",
 		"js-yaml": "^4.1.0",
