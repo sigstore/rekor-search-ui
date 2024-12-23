@@ -35,7 +35,11 @@ const DUMP_OPTIONS: jsyaml.DumpOptions = {
 	replacer: (key, value) => {
 		if (Convert.isBase64(value)) {
 			try {
-				return load(window.atob(value));
+				let decodedVal = window.atob(value);
+				if (decodedVal.startsWith("-----BEGIN")) {
+					return decodedVal;
+				}
+				return load(decodedVal);
 			} catch (e) {
 				return value;
 			}
