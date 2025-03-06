@@ -4,7 +4,7 @@ https://search.sigstore.dev/
 
 ![Rekor UI Screenshot](assets/screenshot2.png)
 
-## Getting Started
+# Getting Started
 
 First, run the development server:
 
