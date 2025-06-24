@@ -21,13 +21,13 @@ export function isAttribute(input: string): input is Attribute {
 
 export type SearchQuery =
 	| {
-		attribute: "email" | "hash" | "commitSha" | "uuid";
-		query: string;
-	}
+			attribute: "email" | "hash" | "commitSha" | "uuid";
+			query: string;
+	  }
 	| {
-		attribute: "logIndex";
-		query: number;
-	};
+			attribute: "logIndex";
+			query: number;
+	  };
 
 export interface RekorEntries {
 	totalCount: number;
@@ -59,17 +59,25 @@ export function useRekorSearch() {
 						],
 					};
 				case "email":
-					return queryEntries(client, {
-						email: search.query,
-					}, page);
+					return queryEntries(
+						client,
+						{
+							email: search.query,
+						},
+						page,
+					);
 				case "hash":
 					let query = search.query;
 					if (!query.startsWith("sha256:")) {
 						query = `sha256:${query}`;
 					}
-					return queryEntries(client, {
-						hash: query,
-					}, page);
+					return queryEntries(
+						client,
+						{
+							hash: query,
+						},
+						page,
+					);
 				case "commitSha":
 					const hash = await digestMessage(search.query);
 					return queryEntries(client, { hash }, page);

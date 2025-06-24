@@ -57,20 +57,18 @@ function Error({ error }: { error: unknown }) {
 	);
 }
 
-function RekorList({ 
-	rekorEntries, 
-	page, 
-	onPageChange
-}: { 
+function RekorList({
+	rekorEntries,
+	page,
+	onPageChange,
+}: {
 	rekorEntries?: RekorEntries;
 	page: number;
 	onPageChange: (event: React.ChangeEvent<unknown>, page: number) => void;
-
- }) {
+}) {
 	if (!rekorEntries) {
 		return <></>;
 	}
-
 
 	if (rekorEntries.entries.length === 0) {
 		return (
@@ -235,7 +233,7 @@ export function Explorer() {
 			) : loading ? (
 				<LoadingIndicator />
 			) : (
-				<RekorList 
+				<RekorList
 					rekorEntries={data}
 					page={page}
 					onPageChange={handlePageChange}
