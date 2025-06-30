@@ -2,6 +2,8 @@ import { useCallback } from "react";
 import { LogEntry, RekorClient, SearchIndex } from "rekor";
 import { useRekorClient } from "./context";
 
+const PAGE_SIZE = 20;
+
 export const ATTRIBUTES = [
 	"email",
 	"hash",
@@ -36,7 +38,7 @@ export function useRekorSearch() {
 	const client = useRekorClient();
 
 	return useCallback(
-		async (search: SearchQuery): Promise<RekorEntries> => {
+		async (search: SearchQuery, page: number = 1): Promise<RekorEntries> => {
 			switch (search.attribute) {
 				case "logIndex":
 					return {
@@ -57,20 +59,28 @@ export function useRekorSearch() {
 						],
 					};
 				case "email":
-					return queryEntries(client, {
-						email: search.query,
-					});
+					return queryEntries(
+						client,
+						{
+							email: search.query,
+						},
+						page,
+					);
 				case "hash":
 					let query = search.query;
 					if (!query.startsWith("sha256:")) {
 						query = `sha256:${query}`;
 					}
-					return queryEntries(client, {
-						hash: query,
-					});
+					return queryEntries(
+						client,
+						{
+							hash: query,
+						},
+						page,
+					);
 				case "commitSha":
 					const hash = await digestMessage(search.query);
-					return queryEntries(client, { hash });
+					return queryEntries(client, { hash }, page);
 			}
 		},
 		[client],
@@ -80,10 +90,17 @@ export function useRekorSearch() {
 async function queryEntries(
 	client: RekorClient,
 	query: SearchIndex,
+	page: number,
 ): Promise<RekorEntries> {
 	const logIndexes = await client.index.searchIndex({ query });
 
-	const uuidToRetrieve = logIndexes.slice(0, 20);
+	// Preventing entries from jumping between pages on refresh
+	logIndexes.sort();
+
+	const startIndex = (page - 1) * PAGE_SIZE;
+	const endIndex = startIndex + PAGE_SIZE;
+	const uuidToRetrieve = logIndexes.slice(startIndex, endIndex);
+
 	const entries = await Promise.all(
 		uuidToRetrieve.map(entryUuid =>
 			client.entries.getLogEntryByUuid({ entryUuid }),
