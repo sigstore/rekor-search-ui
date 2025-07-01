@@ -7,15 +7,22 @@ on:
   pull_request:
     branches: ["main"]
 
+permissions:
+  contents: read
+
 jobs:
   prettier:
     name: Prettier
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
-      - name: Check prettify code
-        uses: creyD/prettier_action@v4.3
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
-          dry: true
-          prettier_options: --check .
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: "package.json"
+      - name: Check prettify code
+        run: |
+          npm ci
+          npx prettier --check .
