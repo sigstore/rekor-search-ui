@@ -77,12 +77,14 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('**/package-lock.json', '**/yarn.lock') }}-
       - name: Install dependencies
-        run: "${STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_MANAGER}" "${STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_COMMAND}"
+        run: |
+          "${STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_MANAGER}" "${STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_COMMAND}"
         env:
           STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_MANAGER: ${{ steps.detect-package-manager.outputs.manager }}
           STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_COMMAND: ${{ steps.detect-package-manager.outputs.command }}
       - name: Build with Next.js
-        run: "${STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_RUNNER}" next build
+        run: |
+          "${STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_RUNNER}" next build
         env:
           STEPS_DETECT_PACKAGE_MANAGER_OUTPUTS_RUNNER: ${{ steps.detect-package-manager.outputs.runner }}
       - name: Upload artifact
