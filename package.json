@@ -21,7 +21,7 @@
 		"@mui/lab": "5.0.0-alpha.114",
 		"@mui/material": "^5.5.0",
 		"@peculiar/x509": "1.8.4",
-		"js-yaml": "^4.1.0",
+		"js-yaml": "^4.1.1",
 		"moment": "^2.30.1",
 		"next": "^15.3.4",
 		"pvtsutils": "^1.3.2",
