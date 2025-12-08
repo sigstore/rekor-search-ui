@@ -35,7 +35,7 @@ const config = {
 	testPathIgnorePatterns: ["<rootDir>/node_modules/", "<rootDir>/.next/"],
 
 	transformIgnorePatterns: [
-		"/node_modules/(?!(refractor|hastscript|unist-|vfile|property-information|space-separated-tokens|comma-separated-tokens|web-namespaces|html-void-elements|character-entities)/)",
+		"/node_modules/",
 		"^.+\\.module\\.(css|sass|scss)$",
 	],
 	verbose: true,
