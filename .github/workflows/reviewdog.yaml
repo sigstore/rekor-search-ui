@@ -53,8 +53,8 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: chainguard-dev/actions/trailing-space@3e8a2a226fad9e1ecbf2d359b8a7697554a4ac6d # v1.5.10
-      - uses: chainguard-dev/actions/eof-newline@3e8a2a226fad9e1ecbf2d359b8a7697554a4ac6d # v1.5.10
+      - uses: chainguard-dev/actions/trailing-space@7d647f470c4d3692286221bd17ca78206976a61c # v1.5.11
+      - uses: chainguard-dev/actions/eof-newline@7d647f470c4d3692286221bd17ca78206976a61c # v1.5.11
 
   donotsubmit:
     name: Do not submit
@@ -64,4 +64,4 @@ jobs:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
         with:
           persist-credentials: false
-      - uses: chainguard-dev/actions/donotsubmit@3e8a2a226fad9e1ecbf2d359b8a7697554a4ac6d # v1.5.10
+      - uses: chainguard-dev/actions/donotsubmit@7d647f470c4d3692286221bd17ca78206976a61c # v1.5.11
