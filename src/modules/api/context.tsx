@@ -12,6 +12,8 @@ export interface RekorClientContext {
 	client: RekorClient;
 	baseUrl?: string;
 	setBaseUrl: (base: string | undefined) => void;
+	rekorV2API: boolean;
+	setRekorV2API: (enabled: boolean) => void;
 }
 
 export const RekorClientContext = createContext<RekorClientContext | undefined>(
@@ -22,6 +24,7 @@ export const RekorClientProvider: FunctionComponent<PropsWithChildren<{}>> = ({
 	children,
 }) => {
 	const [baseUrl, setBaseUrl] = useState<string>();
+	const [rekorV2API, setRekorV2API] = useState<boolean>(false);
 
 	const context: RekorClientContext = useMemo(() => {
 		/*
@@ -38,8 +41,10 @@ export const RekorClientProvider: FunctionComponent<PropsWithChildren<{}>> = ({
 			client: new RekorClient({ BASE: baseUrl }),
 			baseUrl,
 			setBaseUrl,
+			rekorV2API,
+			setRekorV2API,
 		};
-	}, [baseUrl]);
+	}, [baseUrl, rekorV2API]);
 
 	return (
 		<RekorClientContext.Provider value={context}>
@@ -69,4 +74,17 @@ export function useRekorBaseUrl(): [
 	}
 
 	return [ctx.baseUrl, ctx.setBaseUrl];
+}
+
+export function useRekorV2API(): [
+	RekorClientContext["rekorV2API"],
+	RekorClientContext["setRekorV2API"],
+] {
+	const ctx = useContext(RekorClientContext);
+
+	if (!ctx) {
+		throw new Error("Hook useRekorV2API requires RekorClientContext.");
+	}
+
+	return [ctx.rekorV2API, ctx.setRekorV2API];
 }

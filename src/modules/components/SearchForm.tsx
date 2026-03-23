@@ -10,6 +10,7 @@ import {
 import Paper from "@mui/material/Paper";
 import { ReactNode, useEffect } from "react";
 import { Controller, RegisterOptions, useForm } from "react-hook-form";
+import { useRekorV2API } from "../api/context";
 import { Attribute, ATTRIBUTES } from "../api/rekor_api";
 
 export interface FormProps {
@@ -124,6 +125,17 @@ export function SearchForm({ defaultValues, onSubmit, isLoading }: FormProps) {
 	}, [defaultValues, setValue]);
 
 	const watchAttribute = watch("attribute");
+	const [rekorV2API] = useRekorV2API();
+
+	useEffect(() => {
+		if (rekorV2API && watchAttribute !== "logIndex") {
+			setValue("attribute", "logIndex");
+		}
+	}, [rekorV2API, watchAttribute, setValue]);
+
+	const availableAttributes = rekorV2API
+		? ATTRIBUTES.filter(attr => attr === "logIndex")
+		: ATTRIBUTES;
 
 	useEffect(() => {
 		if (control.getFieldState("attribute").isTouched) {
@@ -172,7 +184,7 @@ export function SearchForm({ defaultValues, onSubmit, isLoading }: FormProps) {
 										{...field}
 										label="Attribute"
 									>
-										{ATTRIBUTES.map(attribute => (
+										{availableAttributes.map(attribute => (
 											<MenuItem
 												key={attribute}
 												value={attribute}

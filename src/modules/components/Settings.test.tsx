@@ -1,5 +1,6 @@
 jest.mock("../api/context", () => ({
 	useRekorBaseUrl: jest.fn(),
+	useRekorV2API: jest.fn(),
 }));
 
 jest.mock("next/config", () => () => ({
@@ -10,7 +11,7 @@ jest.mock("next/config", () => () => ({
 
 import { render, screen } from "@testing-library/react";
 import { Settings } from "./Settings";
-import { useRekorBaseUrl } from "../api/context";
+import { useRekorBaseUrl, useRekorV2API } from "../api/context";
 
 describe("Settings Component", () => {
 	const mockOnClose = jest.fn();
@@ -23,6 +24,7 @@ describe("Settings Component", () => {
 			"https://initial.rekor.domain",
 			mockSetBaseUrl,
 		]);
+		(useRekorV2API as jest.Mock).mockReturnValue([false, jest.fn()]);
 	});
 
 	afterEach(() => {
