@@ -4,6 +4,7 @@ jest.mock("../utils/date", () => ({
 }));
 jest.mock("./HashedRekord", () => ({
 	HashedRekordViewer: () => <div>MockedHashedRekordViewer</div>,
+	HashedRekordV002Viewer: () => <div>MockedHashedRekordV002Viewer</div>,
 }));
 
 import atobMock from "../../__mocks__/atobMock";
