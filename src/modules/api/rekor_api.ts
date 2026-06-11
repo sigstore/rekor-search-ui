@@ -1,11 +1,14 @@
 import { useCallback } from "react";
-import { LogEntry, RekorClient, SearchIndex } from "rekor";
+import { LogEntry, RekorClient, SearchIndex as UpstreamSearchIndex } from "rekor";
 import { useRekorClient } from "./context";
+
+type SearchIndex = UpstreamSearchIndex & { subject?: string };
 
 const PAGE_SIZE = 20;
 
 export const ATTRIBUTES = [
 	"email",
+	"subject",
 	"hash",
 	"commitSha",
 	"uuid",
@@ -21,7 +24,7 @@ export function isAttribute(input: string): input is Attribute {
 
 export type SearchQuery =
 	| {
-			attribute: "email" | "hash" | "commitSha" | "uuid";
+			attribute: "email" | "subject" | "hash" | "commitSha" | "uuid";
 			query: string;
 	  }
 	| {
@@ -66,6 +69,14 @@ export function useRekorSearch() {
 						},
 						page,
 					);
+				case "subject":
+					return queryEntries(
+						client,
+						{
+							subject: search.query,
+						},
+						page,
+					);
 				case "hash":
 					let query = search.query;
 					if (!query.startsWith("sha256:")) {
@@ -92,7 +103,9 @@ async function queryEntries(
 	query: SearchIndex,
 	page: number,
 ): Promise<RekorEntries> {
-	const logIndexes = await client.index.searchIndex({ query });
+	const logIndexes = await client.index.searchIndex({
+		query: query as UpstreamSearchIndex,
+	});
 
 	// Preventing entries from jumping between pages on refresh
 	logIndexes.sort();
