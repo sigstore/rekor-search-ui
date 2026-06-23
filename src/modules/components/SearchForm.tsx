@@ -44,6 +44,25 @@ const inputConfigByAttribute: Record<FormInputs["attribute"], InputConfig> = {
 			},
 		},
 	},
+	subject: {
+		name: "Subject (SAN)",
+		helperText: (
+			<>
+				Subject Alternative Name on the signing cert — e.g. a GitHub OIDC URI
+				such as{" "}
+				<code>
+					https://github.com/owner/repo/.github/workflows/build.yml@refs/heads/main
+				</code>
+				. Lookup is case-insensitive.
+			</>
+		),
+		rules: {
+			maxLength: {
+				value: 2048,
+				message: "Subject must be 2048 characters or fewer",
+			},
+		},
+	},
 	hash: {
 		name: "Hash",
 		rules: {
