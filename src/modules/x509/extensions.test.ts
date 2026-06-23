@@ -14,7 +14,9 @@ describe("EXTENSIONS_CONFIG['2.5.29.17']", () => {
 
 		const out = EXTENSIONS_CONFIG["2.5.29.17"].toJSON({
 			rawData: built.rawData,
-		} as unknown as Parameters<typeof EXTENSIONS_CONFIG[string]["toJSON"]>[0]);
+		} as unknown as Parameters<
+			(typeof EXTENSIONS_CONFIG)[string]["toJSON"]
+		>[0]);
 
 		expect(out).toEqual([
 			{

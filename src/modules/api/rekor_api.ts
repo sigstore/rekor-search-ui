@@ -1,5 +1,9 @@
 import { useCallback } from "react";
-import { LogEntry, RekorClient, SearchIndex as UpstreamSearchIndex } from "rekor";
+import {
+	LogEntry,
+	RekorClient,
+	SearchIndex as UpstreamSearchIndex,
+} from "rekor";
 import { useRekorClient } from "./context";
 
 type SearchIndex = UpstreamSearchIndex & { subject?: string };
