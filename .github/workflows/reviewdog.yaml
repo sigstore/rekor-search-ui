@@ -22,7 +22,7 @@ jobs:
       - uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
         with:
           node-version-file: "package.json"
-      - uses: reviewdog/action-eslint@556a3fdaf8b4201d4d74d406013386aa4f7dab96 # v1.34.0
+      - uses: reviewdog/action-eslint@3ee2a450da17e060b9dfa4bffd53976906c6b2b0 # v1.36.1
         with:
           reporter: github-check
           eslint_flags: "src/"
@@ -41,7 +41,7 @@ jobs:
           yamls=$(find .github -name "*.y*ml" | grep -v dependabot. | tr '\n' ' ')
           echo "files=${yamls}" >> "$GITHUB_OUTPUT"
       - name: Action lint
-        uses: reviewdog/action-actionlint@e58ee9d111489c31395fbe4857b0be6e7635dbda # v1.70.0
+        uses: reviewdog/action-actionlint@7abf25e1607ec65838b73d0484ff31f8e9499d80 # v1.81.2
         with:
           actionlint_flags: ${{ steps.get_yamls.outputs.files }}
 
@@ -53,8 +53,8 @@ jobs:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
-      - uses: chainguard-dev/actions/trailing-space@fac81f8edade777ac0bedfa9f4a42591accab9c8 # v1.5.14
-      - uses: chainguard-dev/actions/eof-newline@fac81f8edade777ac0bedfa9f4a42591accab9c8 # v1.5.14
+      - uses: chainguard-dev/actions/trailing-space@794a2c44abbbd7b3a186db97b359270e4105448f # v1.8.0
+      - uses: chainguard-dev/actions/eof-newline@794a2c44abbbd7b3a186db97b359270e4105448f # v1.8.0
 
   donotsubmit:
     name: Do not submit
@@ -64,4 +64,4 @@ jobs:
       - uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6.0.1
         with:
           persist-credentials: false
-      - uses: chainguard-dev/actions/donotsubmit@fac81f8edade777ac0bedfa9f4a42591accab9c8 # v1.5.14
+      - uses: chainguard-dev/actions/donotsubmit@794a2c44abbbd7b3a186db97b359270e4105448f # v1.8.0
