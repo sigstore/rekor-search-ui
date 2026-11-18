@@ -63,7 +63,9 @@ export const EXTENSIONS_CONFIG: Record<string, ExtensionConfig> = {
 	"2.5.29.17": {
 		name: "Subject Alternative Name",
 		toJSON(rawExtension: Extension) {
-			return new SubjectAlternativeNameExtension(rawExtension.rawData).toJSON();
+			return new SubjectAlternativeNameExtension(
+				rawExtension.rawData,
+			).names.items.map(name => ({ type: name.type, value: name.value }));
 		},
 	},
 	"2.5.29.19": {

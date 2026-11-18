@@ -33,4 +33,23 @@ describe("useRekorSearch", () => {
 
 		expect(mockGetLogEntryByIndex).toHaveBeenCalledWith({ logIndex: 123 });
 	});
+
+	it("searches by subject (SAN URI)", async () => {
+		const mockSearchIndex = jest.fn().mockResolvedValue([]);
+
+		(useRekorClient as jest.Mock).mockReturnValue({
+			index: { searchIndex: mockSearchIndex },
+			entries: { getLogEntryByUuid: jest.fn() },
+		});
+
+		const { result } = renderHook(() => useRekorSearch());
+
+		const sanURI =
+			"https://github.com/owner/repo/.github/workflows/build.yml@refs/heads/main";
+		await result.current({ attribute: "subject", query: sanURI });
+
+		expect(mockSearchIndex).toHaveBeenCalledWith({
+			query: { subject: sanURI },
+		});
+	});
 });
