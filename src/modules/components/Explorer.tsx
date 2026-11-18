@@ -16,6 +16,7 @@ import {
 	SearchQuery,
 	useRekorSearch,
 } from "../api/rekor_api";
+import { useRekorBaseUrl, useRekorV2API } from "../api/context";
 import { Entry } from "./Entry";
 import { FormInputs, SearchForm } from "./SearchForm";
 
@@ -38,11 +39,11 @@ function Error({ error }: { error: unknown }) {
 			title = `Code ${error.body.code}: ${error.body.message}`;
 		}
 		detail = `${error.url}: ${error.status}`;
-	} else if (typeof error == "string") {
+	} else if (error instanceof Error) {
+		title = (error as Error).message;
+		detail = (error as Error).stack;
+	} else if (typeof error === "string") {
 		title = error;
-	} else if (error instanceof TypeError) {
-		title = error.message;
-		detail = error.stack;
 	}
 
 	return (
@@ -137,6 +138,9 @@ export function Explorer() {
 	const [query, setQuery] = useState<SearchQuery>();
 	const search = useRekorSearch();
 
+	const [baseUrl, setBaseUrl] = useRekorBaseUrl();
+	const [rekorV2API, setRekorV2API] = useRekorV2API();
+
 	const [data, setData] = useState<RekorEntries>();
 	const [error, setError] = useState<unknown>();
 	const [loading, setLoading] = useState(false);
@@ -163,21 +167,45 @@ export function Explorer() {
 		(formInputs: FormInputs) => {
 			setPage(1);
 
+			const queryConfig: Record<string, string> = {
+				[formInputs.attribute]: formInputs.value,
+			};
+			let urlString = `/?${formInputs.attribute}=${formInputs.value}`;
+
+			if (rekorV2API) {
+				queryConfig["rekorV2"] = "true";
+				urlString += `&rekorV2=true`;
+			}
+			if (baseUrl) {
+				queryConfig["rekorUrl"] = baseUrl;
+				urlString += `&rekorUrl=${encodeURIComponent(baseUrl)}`;
+			}
+
 			router.push(
 				{
 					pathname: router.pathname,
-					query: {
-						[formInputs.attribute]: formInputs.value,
-					},
+					query: queryConfig,
 				},
-				`/?${formInputs.attribute}=${formInputs.value}`,
+				urlString,
 				{ shallow: true },
 			);
 		},
-		[router],
+		[router, rekorV2API, baseUrl],
 	);
 
 	useEffect(() => {
+		const rekorV2Query = router.query["rekorV2"];
+		if (rekorV2Query === "true") {
+			setRekorV2API(true);
+		} else if (rekorV2Query === "false") {
+			setRekorV2API(false);
+		}
+
+		const rekorUrlQuery = router.query["rekorUrl"];
+		if (typeof rekorUrlQuery === "string") {
+			setBaseUrl(rekorUrlQuery);
+		}
+
 		const attribute = Object.keys(router.query).find(key =>
 			isAttribute(key),
 		) as Attribute | undefined;

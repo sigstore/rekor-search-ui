@@ -58,3 +58,69 @@ describe("HashedRekordViewer", () => {
 		).toBeInTheDocument();
 	});
 });
+
+import { HashedRekordV002Viewer } from "./HashedRekord";
+
+describe("HashedRekordV002Viewer", () => {
+	it("renders the component bridging a full oneOf snake_case spec payload", () => {
+		const fakeHex = "a".repeat(64);
+		const mockedV002SnakeCase = {
+			hashed_rekord_v002: {
+				data: {
+					hash: {
+						algorithm: "sha256",
+						value: fakeHex,
+					},
+				},
+				signature: {
+					content: "mockedV002SignatureContent",
+					verifier: {
+						public_key: {
+							raw_bytes: window.btoa("mockedV002PublicKeyBytes"),
+						},
+					},
+				},
+			},
+		};
+
+		render(<HashedRekordV002Viewer hashedRekord={mockedV002SnakeCase} />);
+
+		expect(screen.getByText("Hash")).toBeInTheDocument();
+		expect(screen.getByText(`sha256:${fakeHex}`)).toBeInTheDocument();
+		expect(screen.getByText("mockedV002SignatureContent")).toBeInTheDocument();
+		expect(screen.getByText("Public Key")).toBeInTheDocument();
+		expect(
+			screen.getByText(/bW9ja2VkVjAwMlB1YmxpY0tleUJ5dGVz/),
+		).toBeInTheDocument(); // raw base64 rendered within BEGIN/END PUBLIC KEY tags
+	});
+
+	it("renders the component with a generated valid PEM wrapping for raw binary certificates", () => {
+		const mockedFlatCert = {
+			data: {
+				digest: window.btoa("hexValueDigestRaw"),
+			},
+			signature: {
+				content: "flatSigContent",
+			},
+			verifier: {
+				x509Certificate: {
+					rawBytes: window.btoa("derBinaryBytes"),
+				},
+			},
+		};
+
+		render(<HashedRekordV002Viewer hashedRekord={mockedFlatCert} />);
+
+		// Verify digest parses correctly
+		expect(screen.getByText("flatSigContent")).toBeInTheDocument();
+
+		// Ensure it hits our decoding logic branch mocked out in decodex509Mock
+		// (which by default injects the phrase 'Mocked Certificate' into the dumped JSON strings in the test)
+		expect(
+			screen.getByText(
+				/'-----BEGIN CERTIFICATE-----Mocked Certificate-----END CERTIFICATE-----'/,
+			),
+		).toBeInTheDocument();
+		expect(screen.getByText("Public Key Certificate")).toBeInTheDocument();
+	});
+});

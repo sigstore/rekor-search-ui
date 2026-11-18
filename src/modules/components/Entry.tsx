@@ -27,7 +27,7 @@ import {
 } from "rekor";
 import { toRelativeDateString } from "../utils/date";
 import { DSSEViewer } from "./DSSE";
-import { HashedRekordViewer } from "./HashedRekord";
+import { HashedRekordViewer, HashedRekordV002Viewer } from "./HashedRekord";
 import { IntotoViewer001 } from "./Intoto001";
 import { IntotoViewer002 } from "./Intoto002";
 
@@ -136,7 +136,11 @@ export function Entry({ entry }: { entry: LogEntry }) {
 	let parsed: ReactNode | undefined;
 	switch (body.kind) {
 		case "hashedrekord":
-			parsed = <HashedRekordViewer hashedRekord={body.spec as RekorSchema} />;
+			if (body.apiVersion === "0.0.1") {
+				parsed = <HashedRekordViewer hashedRekord={body.spec as RekorSchema} />;
+			} else {
+				parsed = <HashedRekordV002Viewer hashedRekord={body.spec as any} />;
+			}
 			break;
 		case "intoto":
 			if (body.apiVersion == "0.0.1") {
@@ -153,27 +157,32 @@ export function Entry({ entry }: { entry: LogEntry }) {
 
 	return (
 		<Paper sx={{ mb: 2, p: 1 }}>
-			<Typography
-				variant="h5"
-				component="h2"
-				sx={{
-					overflow: "hidden",
-					textOverflow: "ellipsis",
-				}}
-			>
-				Entry UUID:{" "}
-				<Link
-					component={NextLink}
-					href={`/?uuid=${uuid}`}
-					passHref
-				>
-					{uuid}
-				</Link>
-			</Typography>
-			<Divider
-				flexItem
-				sx={{ my: 1 }}
-			/>
+			{uuid !==
+				"0000000000000000000000000000000000000000000000000000000000000000" && (
+				<>
+					<Typography
+						variant="h5"
+						component="h2"
+						sx={{
+							overflow: "hidden",
+							textOverflow: "ellipsis",
+						}}
+					>
+						Entry UUID:{" "}
+						<Link
+							component={NextLink}
+							href={`/?uuid=${uuid}`}
+							passHref
+						>
+							{uuid}
+						</Link>
+					</Typography>
+					<Divider
+						flexItem
+						sx={{ my: 1 }}
+					/>
+				</>
+			)}
 			<Grid
 				container
 				sx={{ mb: 1 }}
@@ -217,7 +226,11 @@ export function Entry({ entry }: { entry: LogEntry }) {
 				>
 					<Card
 						title="Integrated time"
-						content={toRelativeDateString(new Date(obj.integratedTime * 1000))}
+						content={
+							obj.integratedTime === 0
+								? "Unsupported"
+								: toRelativeDateString(new Date(obj.integratedTime * 1000))
+						}
 						dividerSx={{
 							display: {
 								xs: "none",

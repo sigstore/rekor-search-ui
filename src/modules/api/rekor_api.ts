@@ -1,6 +1,7 @@
 import { useCallback } from "react";
 import { LogEntry, RekorClient, SearchIndex } from "rekor";
-import { useRekorClient } from "./context";
+import { useRekorBaseUrl, useRekorClient, useRekorV2API } from "./context";
+import { getRekorTileEntryByIndex } from "./tiles";
 
 const PAGE_SIZE = 20;
 
@@ -36,11 +37,19 @@ export interface RekorEntries {
 
 export function useRekorSearch() {
 	const client = useRekorClient();
+	const [baseUrl] = useRekorBaseUrl();
+	const [rekorV2API] = useRekorV2API();
 
 	return useCallback(
 		async (search: SearchQuery, page: number = 1): Promise<RekorEntries> => {
 			switch (search.attribute) {
 				case "logIndex":
+					if (rekorV2API) {
+						return {
+							totalCount: 1,
+							entries: [await getRekorTileEntryByIndex(baseUrl, search.query)],
+						};
+					}
 					return {
 						totalCount: 1,
 						entries: [
@@ -83,7 +92,7 @@ export function useRekorSearch() {
 					return queryEntries(client, { hash }, page);
 			}
 		},
-		[client],
+		[client, baseUrl, rekorV2API],
 	);
 }
 

@@ -1,9 +1,11 @@
 import { renderHook } from "@testing-library/react";
 import { useRekorSearch } from "./rekor_api";
-import { useRekorClient } from "./context";
+import { useRekorBaseUrl, useRekorClient, useRekorV2API } from "./context";
 
 jest.mock("./context", () => ({
 	useRekorClient: jest.fn(),
+	useRekorBaseUrl: jest.fn(),
+	useRekorV2API: jest.fn(),
 }));
 
 Object.defineProperty(global.self, "crypto", {
@@ -26,6 +28,11 @@ describe("useRekorSearch", () => {
 		(useRekorClient as jest.Mock).mockReturnValue({
 			entries: { getLogEntryByIndex: mockGetLogEntryByIndex },
 		});
+		(useRekorBaseUrl as jest.Mock).mockReturnValue([
+			"http://localhost",
+			jest.fn(),
+		]);
+		(useRekorV2API as jest.Mock).mockReturnValue([false, jest.fn()]);
 
 		const { result } = renderHook(() => useRekorSearch());
 
