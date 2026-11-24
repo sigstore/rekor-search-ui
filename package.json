@@ -22,7 +22,7 @@
 		"@mui/material": "^5.5.0",
 		"@peculiar/x509": "1.14.3",
 		"js-yaml": "^4.1.1",
-		"moment": "^2.30.1",
+		"moment": "^2.31.0",
 		"next": "^15.4.8",
 		"pvtsutils": "^1.3.2",
 		"react": "^18.0.0-rc.1",
